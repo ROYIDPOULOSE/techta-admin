@@ -16,36 +16,21 @@
       ]
     },
     {
-      name: "Sales",
-      icon: "fa-cart-shopping",
-      items: [
-        { name: "Order Management", page: "orders" },
-        { name: "Returns and Refunds", page: "returns" },
-        { name: "Invoices", page: "invoices" },
-      ]
-    },
-    {
-      name: "Products",
+      name: "Cources",
       icon: "fa-tag",
       route: "/products",
       items: [
-		{ name: "Products", page: "products" },
-        { name: "Categories", page: "categories" },
-        { name: "Brands", page: "brands" },
-        { name: "Collection", page: "collection" },
-        { name: "Lookbook", page: "lookbook" },
-        { name: "Attributes", page: "attributes" },
-        { name: "Attribute Group", page: "attribute-group" },
+        { name: "Individual Software", page: "customer-group" },
+        { name: "Package", page: "reviews" }
       ]
     },
     {
-      name: "Customers",
+      name: "Students",
       icon: "fa-user",
       
       items: [
-	    	{ name: "Customers", page: "customers" },
-        { name: "Customer Group", page: "customer-group" },
-        { name: "Review and Rating", page: "reviews" }
+        { name: "Individual Software", page: "customer-group" },
+        { name: "Package", page: "reviews" }
       ]
     },
      {
