@@ -1,11 +1,16 @@
-<h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+<script>
+  import { goto } from '$app/navigation';
+
+  function navigateToDashboard() {
+    goto('/admin/dashboard');
+  }
+</script>
+<nav>
+  <button on:click={navigateToDashboard}>Go to Dashboard</button>
+</nav>
   
   <style lang="postcss">
     :global(html) {
       background-color: theme(colors.gray.100);
     }
   </style>
-
-  
