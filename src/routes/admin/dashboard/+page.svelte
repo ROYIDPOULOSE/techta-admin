@@ -3,8 +3,4 @@
     export let data: PageData;
 </script>
 
-<!-- <div class="flex items-center justify-center h-screen">
-    <div>
-        <h2>Dashboard</h2>
-    </div>
-</div> -->
+<h2 class="text-3xl font-bold tracking-tight p-6">Dashboard</h2>
