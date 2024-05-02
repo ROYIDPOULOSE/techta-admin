@@ -10,18 +10,17 @@
     {
       name: "Dashboard",
       icon: "fa-house",
-      
       items: [
-        { name: "Overview", page: "dashboard" },
+        { name: "Overview", page: "admin/dashboard" },
       ]
     },
     {
       name: "Cources",
       icon: "fa-tag",
-      route: "/products",
+      route: "/admin/dashboard",
       items: [
-        { name: "Individual Software", page: "customer-group" },
-        { name: "Package", page: "reviews" }
+        { name: "Individual Software", page: "admin/course/individualCourse" },
+        { name: "Package", page: "admin/course/package" }
       ]
     },
     {
@@ -29,8 +28,8 @@
       icon: "fa-user",
       
       items: [
-        { name: "Individual Software", page: "customer-group" },
-        { name: "Package", page: "reviews" }
+        { name: "Student Details", page: "customer-group" },
+        { name: "Students got placed", page: "reviews" }
       ]
     },
      {
