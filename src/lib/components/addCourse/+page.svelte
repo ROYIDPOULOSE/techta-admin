@@ -26,7 +26,6 @@
     
     async function saveCourse() {
       const courseData: CourseData = {
-        // id: editingCourse?.id,
         course: courseInput,
         software: softwareInput,
         duration: durationInput,
@@ -34,19 +33,16 @@
       
       try {
         if (editingCourse) {
-          // Update existing course
           const courseDocRef = doc(db, 'courses', editingCourse.id);
           await updateDoc(courseDocRef, courseData);
-          dispatch('update', courseData);
+          dispatch('update', { ...editingCourse, ...courseData });
         } else {
-          // Add new course
           const courseRef = collection(db, 'courses');
           const docRef = await addDoc(courseRef, courseData);
           const newCourse = { id: docRef.id, ...courseData };
           dispatch('update', newCourse);
         }
         
-        // Clear inputs or show success message
         courseInput = "";
         softwareInput = "";
         durationInput = 0;
