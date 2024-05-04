@@ -4,7 +4,7 @@
     import { Button } from "$lib/components/ui/button";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { createEventDispatcher } from 'svelte';
-    import { getFirestore, collection, addDoc, doc, updateDoc } from "firebase/firestore";
+    import { getFirestore, collection, addDoc, doc, updateDoc, Timestamp, serverTimestamp } from "firebase/firestore";
     import { app, db } from "$lib/services/firebase";
 
     const dispatch = createEventDispatcher();
@@ -18,6 +18,7 @@
       course: string;
       software: string;
       duration: number;
+      lastUpdated: Timestamp;
     }
     
     let courseInput: string = editingCourse?.course || '';
@@ -29,12 +30,13 @@
         course: courseInput,
         software: softwareInput,
         duration: durationInput,
+        lastUpdated: serverTimestamp() as Timestamp,
       };
       
       try {
         if (editingCourse) {
           const courseDocRef = doc(db, 'courses', editingCourse.id);
-          await updateDoc(courseDocRef, courseData);
+          await updateDoc(courseDocRef, { ...courseData, lastUpdated: serverTimestamp() } );
           dispatch('update', { ...editingCourse, ...courseData });
         } else {
           const courseRef = collection(db, 'courses');

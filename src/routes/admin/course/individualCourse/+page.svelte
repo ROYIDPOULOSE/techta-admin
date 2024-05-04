@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
+    import { Select } from '$lib/components/ui/select';
     import AddCourse from '$lib/components/addCourse/+page.svelte';
     import CourseCard from '$lib/components/courseCard/+page.svelte'
-    import { onSnapshot, collection } from 'firebase/firestore';
+    import { onSnapshot, collection, Timestamp } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
 
     interface CourseData {
@@ -10,15 +11,26 @@
         course: string;
         software: string;
         duration: number;
+        lastUpdated: Timestamp;
     }
 
     let showDialog: boolean = false;
     let courses: CourseData[] = [];
     let editingCourse: CourseData | null = null;
+    let sortOrder: 'lastUpdated' | 'oldestFirst' = 'lastUpdated';
 
     // Fetch courses from Firestore
     const unsubscribe = onSnapshot(collection(db, 'courses'), (snapshot) => {
-        courses = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CourseData));
+        // courses = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CourseData));
+        courses = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            const lastUpdated = data.lastUpdated ? new Timestamp(data.lastUpdated.seconds, data.lastUpdated.nanoseconds) : null;
+            return {
+            id: doc.id,
+            ...data,
+            lastUpdated, // Use the created Timestamp object
+            } as CourseData;
+        });
     });
 
     function toggleForm(course: CourseData | null = null) {
@@ -51,6 +63,31 @@
         }
         closeDialog();
     }
+
+    function sortCourses() {
+        let sortedCourses = courses.slice();
+
+        if (sortOrder === 'oldestFirst') {
+            sortedCourses = sortedCourses.sort((a, b) => {
+                const aTime = a.lastUpdated ? a.lastUpdated.toDate().getTime() : 0;
+                const bTime = b.lastUpdated ? b.lastUpdated.toDate().getTime() : 0;
+                return aTime - bTime;
+            });
+        } else {
+            sortedCourses = sortedCourses.sort((a, b) => {
+                const aTime = a.lastUpdated ? a.lastUpdated.toDate().getTime() : 0;
+                const bTime = b.lastUpdated ? b.lastUpdated.toDate().getTime() : 0;
+                return bTime - aTime; // Sort in descending order by default
+            });
+        }
+
+        courses = sortedCourses;
+        }
+
+    function setSortOrder(order: 'lastUpdated' | 'oldestFirst') {
+        sortOrder = order;
+        sortCourses();
+    }
 </script>
 
 <div class="m-3 bg-background text-foreground rounded-md p-4 px-6 border">
@@ -65,6 +102,23 @@
 				Add Course
 			</Button>
 		</div>
+        <!-- <div class="glow-border">
+            <Button
+              variant="outline"
+              class="text-xs flex items-center gap-2 border px-4 py-1.5"
+              on:click={() => setSortOrder(sortOrder === 'lastUpdated' ? 'oldestFirst' : 'lastUpdated')}>
+              {sortOrder === 'lastUpdated' ? 'Sort by Oldest First' : 'Sort by Last Updated'}
+            </Button>
+        </div> -->
+        <div class="glow-border">
+            <select
+              class="text-xs border px-4 py-1.5"
+              bind:value={sortOrder}
+              on:change={() => sortCourses()}>
+              <option value="lastUpdated">Sort by Last Updated</option>
+              <option value="oldestFirst">Sort by Oldest First</option>
+            </select>
+        </div>
 	</div>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 p-4">
         {#each courses as course}
@@ -79,6 +133,10 @@
             open={showDialog}
             on:close={closeDialog}
             editingCourse={editingCourse}
-            on:update={handleUpdateCourse}/>
+            on:update={(event) => {
+                handleUpdateCourse(event);
+                sortCourses(); // Sort the courses after updating
+            }}
+            />
     {/if}
 </div>
