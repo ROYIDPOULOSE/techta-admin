@@ -14,18 +14,30 @@
 
     let showDialog: boolean = false;
     let courses: CourseData[] = [];
+    let editingCourse: CourseData | null = null;
 
     // Fetch courses from Firestore
     const unsubscribe = onSnapshot(collection(db, 'courses'), (snapshot) => {
         courses = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CourseData));
     });
 
-    function toggleForm() {
-        showDialog = !showDialog;
+    function toggleForm(course: CourseData | null = null) {
+        editingCourse = course;
+        showDialog = true;
     }
 
     function closeDialog(){
         showDialog = false
+        editingCourse = null;
+    }
+
+    function handleEditCourse(event: CustomEvent<CourseData>) {
+        toggleForm(event.detail);
+    }
+
+    function handleUpdateCourse(event: CustomEvent<CourseData>) {
+        console.log('Updated course:', event.detail);
+        closeDialog();
     }
 </script>
 
@@ -44,16 +56,18 @@
 	</div>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 p-4">
         {#each courses as course}
-            <CourseCard {course} />
+            <CourseCard {course} on:edit={handleEditCourse}/>
         {/each}
     </div>
 </div>
 
 <div class="abc">
     {#if showDialog}
-        <AddCourse 
-        open={showDialog}
-        on:close={closeDialog}/>
+        <AddCourse
+            open={showDialog}
+            on:close={closeDialog}
+            editingCourse={editingCourse}
+            on:update={handleUpdateCourse}/>
     {/if}
 </div>
 
