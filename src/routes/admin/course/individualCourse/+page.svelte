@@ -35,8 +35,20 @@
         toggleForm(event.detail);
     }
 
-    function handleUpdateCourse(event: CustomEvent<CourseData>) {
-        console.log('Updated course:', event.detail);
+    function handleUpdateCourse(event: CustomEvent<CourseData | {[key: string]: any }>) {
+        const updatedCourse = event.detail;
+        if (updatedCourse.id) {
+            const updatedCourses = courses.map((course): CourseData => {
+            if (course.id === updatedCourse.id) {
+                return updatedCourse as CourseData; // Type assertion for updatedCourse
+            }
+            return course;
+            });
+            courses = updatedCourses;
+        } else {
+            const newCourse: CourseData = updatedCourse as CourseData;
+            courses = [...courses, newCourse];
+        }
         closeDialog();
     }
 </script>
@@ -70,4 +82,3 @@
             on:update={handleUpdateCourse}/>
     {/if}
 </div>
-
