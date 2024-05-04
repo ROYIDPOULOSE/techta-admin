@@ -2,8 +2,23 @@
 	import { Button } from '$lib/components/ui/button';
     import AddCourse from '$lib/components/addCourse/+page.svelte';
     import CourseCard from '$lib/components/courseCard/+page.svelte'
+    import { onSnapshot, collection } from 'firebase/firestore';
+    import { db } from '$lib/services/firebase';
+
+    interface CourseData {
+        id: string;
+        course: string;
+        software: string;
+        duration: number;
+    }
 
     let showDialog: boolean = false;
+    let courses: CourseData[] = [];
+
+    // Fetch courses from Firestore
+    const unsubscribe = onSnapshot(collection(db, 'courses'), (snapshot) => {
+        courses = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CourseData));
+    });
 
     function toggleForm() {
         showDialog = !showDialog;
@@ -28,14 +43,9 @@
 		</div>
 	</div>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 p-4">
-        <CourseCard/>
-        <CourseCard/>
-        <CourseCard/>
-        <CourseCard/>
-        <CourseCard/>
-        <CourseCard/>
-        <CourseCard/>
-        <CourseCard/>
+        {#each courses as course}
+            <CourseCard {course} />
+        {/each}
     </div>
 </div>
 
