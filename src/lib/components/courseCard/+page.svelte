@@ -4,8 +4,11 @@
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
     import { deleteDoc, doc } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
+    import { createEventDispatcher } from 'svelte';
 
     export let course: { id: string; course: string; software: string; duration: number };
+
+    const dispatch = createEventDispatcher();
 
     function handleDelete() {
         const courseDocRef = doc(db, 'courses', course.id);
@@ -19,6 +22,10 @@
             // You can add error handling logic here
         });
     }
+
+    function handleEdit() {
+        dispatch('edit', course);
+    }
 </script>
 
 <Card.Root>
@@ -31,7 +38,7 @@
           </Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Item>
+          <DropdownMenu.Item on:click={handleEdit}>
             <span>Edit</span>
           </DropdownMenu.Item>
           <DropdownMenu.Item on:click={handleDelete}>
