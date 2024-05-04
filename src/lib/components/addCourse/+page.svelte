@@ -4,48 +4,64 @@
     import { Button } from "$lib/components/ui/button";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { createEventDispatcher } from 'svelte';
-    import { getFirestore, collection, addDoc } from "firebase/firestore";
+    import { getFirestore, collection, addDoc, doc, updateDoc } from "firebase/firestore";
     import { app, db } from "$lib/services/firebase";
 
     const dispatch = createEventDispatcher();
     export let open:boolean = false;
+    export let editingCourse: { id: string; course: string; software: string; duration: number } | null = null;
 
-    function closeDialog() {
-      dispatch('close');
-    }
-
+    
     interface CourseData {
+      [key: string]: any; // Index signature to allow dynamic property access
+      id?: string;
       course: string;
       software: string;
       duration: number;
     }
-
-    let courseInput: string = "";
-    let softwareInput: string = "";
-    let durationInput: number = 0;
-
+    
+    let courseInput: string = editingCourse?.course || '';
+    let softwareInput: string = editingCourse?.software || '';
+    let durationInput: number = editingCourse?.duration || 0;
+    
     async function saveCourse() {
-      const courseRef = collection(db, "courses");
       const courseData: CourseData = {
+        // id: editingCourse?.id,
         course: courseInput,
         software: softwareInput,
         duration: durationInput,
       };
-
+      
       try {
-        await addDoc(courseRef, courseData);
-        console.log("collectionadded");
+        if (editingCourse) {
+          // Update existing course
+          const courseDocRef = doc(db, 'courses', editingCourse.id);
+          await updateDoc(courseDocRef, courseData);
+          dispatch('update', courseData);
+        } else {
+          // Add new course
+          const courseRef = collection(db, 'courses');
+          const docRef = await addDoc(courseRef, courseData);
+          const newCourse = { id: docRef.id, ...courseData };
+          dispatch('update', newCourse);
+        }
         
         // Clear inputs or show success message
         courseInput = "";
         softwareInput = "";
         durationInput = 0;
       } catch (error) {
-        console.error("Error adding course: ", error);
+        console.error("Error updating/adding course: ", error);
       }
     }
-
-</script>
+    
+    function closeDialog() {
+      dispatch('close');
+      courseInput = '';
+      softwareInput = '';
+      durationInput = 0;
+    }
+  </script>
 
 <Dialog.Root open={open} onOpenChange={closeDialog}>
   <Dialog.Content class="sm:max-w-[425px]">
