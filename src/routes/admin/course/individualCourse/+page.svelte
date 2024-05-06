@@ -102,14 +102,6 @@
 				Add Course
 			</Button>
 		</div>
-        <!-- <div class="glow-border">
-            <Button
-              variant="outline"
-              class="text-xs flex items-center gap-2 border px-4 py-1.5"
-              on:click={() => setSortOrder(sortOrder === 'lastUpdated' ? 'oldestFirst' : 'lastUpdated')}>
-              {sortOrder === 'lastUpdated' ? 'Sort by Oldest First' : 'Sort by Last Updated'}
-            </Button>
-        </div> -->
         <div class="glow-border">
             <select
               class="text-xs border px-4 py-1.5"
