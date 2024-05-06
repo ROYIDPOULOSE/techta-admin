@@ -63,12 +63,12 @@
             ...studentData,
             lastUpdated: serverTimestamp(),
           });
-        //   dispatch("update", { ...editingStudent, ...studentData });
+          dispatch("update", { ...editingStudent, ...studentData });
         } else {
           const studentsRef = collection(db, "students");
           const docRef = await addDoc(studentsRef, studentData);
           const newStudent = { id: docRef.id, ...studentData };
-        //   dispatch("update", newStudent);
+          dispatch("update", newStudent);
         }
   
         name = "";
