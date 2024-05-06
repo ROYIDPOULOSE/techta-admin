@@ -30,7 +30,7 @@ export const menuItems: MenuItem[] = [
       name: "Students",
       icon: "fa-user",
       items: [
-        { name: "Student Details", page: "customer-group" },
+        { name: "Student Details", page: "admin/student/studentDetails" },
         { name: "Students got placed", page: "reviews" }
       ]
     },
