@@ -34,6 +34,13 @@ export const menuItems: MenuItem[] = [
         { name: "Students got placed", page: "reviews" }
       ]
     },
+    {
+      name: "Enquires",
+      icon:"fa-user",
+      items: [
+        { name: "Enquiries", page: "admin/enquiries"},
+      ]
+    },
      {
       name: "CMS",
       icon: "fa-users-viewfinder",
