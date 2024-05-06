@@ -40,7 +40,7 @@
 			<Button variant="outline" 
             class="text-xs flex items-center gap-2 border  px-4 py-1.5"
             on:click={() => toggleForm()}>
-				Add Course
+				Add Student
 			</Button>
 		</div>
 	</div>
