@@ -3,12 +3,25 @@
     import { createEventDispatcher } from 'svelte';
     import { Button } from '$lib/components/ui/button';
     import type { StudentData } from './types';
+    import { db } from '$lib/services/firebase';
+    import { deleteDoc, doc } from 'firebase/firestore';
     import { Ellipsis } from 'lucide-svelte';
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
    
     export let students: StudentData[];
 
     const dispatch = createEventDispatcher();
+
+    function handleDelete(student: StudentData) {
+        const courseDocRef = doc(db, 'students', student.id);
+        deleteDoc(courseDocRef)
+        .then(() => {
+            console.log('Course deleted successfully');
+        })
+        .catch((error) => {
+            console.error('Error deleting course: ', error);
+        });
+    }
 
     function handleEditClick(student: StudentData) {
         dispatch('edit', student);
@@ -48,7 +61,7 @@
                   <DropdownMenu.Item on:click={() => handleEditClick(student)}>
                     <span>Edit</span>
                   </DropdownMenu.Item>
-                  <DropdownMenu.Item>
+                  <DropdownMenu.Item on:click={() => handleDelete(student)}>
                     <span>Delete</span>
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
