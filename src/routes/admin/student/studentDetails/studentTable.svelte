@@ -3,6 +3,8 @@
     import { createEventDispatcher } from 'svelte';
     import { Button } from '$lib/components/ui/button';
     import type { StudentData } from './types';
+    import { Ellipsis } from 'lucide-svelte';
+    import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
    
     export let students: StudentData[];
 
@@ -29,16 +31,28 @@
     <Table.Body>
       {#each students as student, i (student.id)}
         <Table.Row>
-          <Table.Cell class="font-medium">{student.studentID}</Table.Cell>
+          <Table.Cell class="font-medium">{student.id}</Table.Cell>
           <Table.Cell>{student.name}</Table.Cell>
           <Table.Cell>{student.address}</Table.Cell>
           <Table.Cell>{student.phone}</Table.Cell>
           <Table.Cell>{student.status}</Table.Cell>
           <Table.Cell>{student.course}</Table.Cell>
           <Table.Cell class="text-right">
-            <Button 
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline" 
-            on:click={() => handleEditClick(student)}>Edit</Button>
+            <DropdownMenu.Root>
+                <DropdownMenu.Trigger>
+                  <Button variant="ghost" size="sm">
+                    <Ellipsis />
+                  </Button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Item on:click={() => handleEditClick(student)}>
+                    <span>Edit</span>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
+                    <span>Delete</span>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+            </DropdownMenu.Root>
           </Table.Cell>
         </Table.Row>
       {/each}
