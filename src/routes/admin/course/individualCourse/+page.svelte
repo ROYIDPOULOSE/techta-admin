@@ -8,9 +8,21 @@
 
     interface CourseData {
         id: string;
-        course: string;
+        course_name: string;
         software: string;
         duration: number;
+        course_discription: string;
+        delivery_mode: string;
+        schedule: string;
+        prerequisites: string;
+        curriculum: string;
+        exam_details: string;
+        instructor: string;
+        course_fee: string;
+        reviews: string;
+        faqs: string;
+        registration: string;
+        contact_information: string
         lastUpdated: Timestamp;
     }
 
@@ -77,7 +89,7 @@
             sortedCourses = sortedCourses.sort((a, b) => {
                 const aTime = a.lastUpdated ? a.lastUpdated.toDate().getTime() : 0;
                 const bTime = b.lastUpdated ? b.lastUpdated.toDate().getTime() : 0;
-                return bTime - aTime; // Sort in descending order by default
+                return bTime - aTime;
             });
         }
 
