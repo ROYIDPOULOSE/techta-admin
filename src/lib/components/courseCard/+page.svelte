@@ -6,7 +6,24 @@
     import { db } from '$lib/services/firebase';
     import { createEventDispatcher } from 'svelte';
 
-    export let course: { id: string; course: string; software: string; duration: number };
+    export let course: { 
+      id: string; 
+      course_name: string; 
+      software: string; 
+      duration: number;
+      course_discription: string;
+      delivery_mode: string;
+      schedule: string;
+      prerequisites: string;
+      curriculum: string;
+      exam_details: string;
+      instructor: string;
+      course_fee: string;
+      reviews: string;
+      faqs: string;
+      registration: string;
+      contact_information: string
+     };
 
     const dispatch = createEventDispatcher();
 
@@ -30,7 +47,7 @@
 
 <Card.Root>
     <Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-      <Card.Title class="text-sm font-bold">{course.course}</Card.Title>
+      <Card.Title class="text-sm font-bold">{course.course_name}</Card.Title>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Button variant="ghost" size="sm">
