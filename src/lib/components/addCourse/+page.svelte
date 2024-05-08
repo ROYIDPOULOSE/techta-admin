@@ -4,8 +4,9 @@
     import { Button } from "$lib/components/ui/button";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { createEventDispatcher } from 'svelte';
-    import { getFirestore, collection, addDoc, doc, updateDoc, Timestamp, serverTimestamp } from "firebase/firestore";
-    import { app, db } from "$lib/services/firebase";
+    import { collection, addDoc, doc, updateDoc, Timestamp, serverTimestamp } from "firebase/firestore";
+    import { db } from "$lib/services/firebase";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
     const dispatch = createEventDispatcher();
     export let open:boolean = false;
@@ -35,6 +36,7 @@
       prerequisites: string;
       curriculum: string;
       course_fee: string;
+      courseImageUrl?: string;
       lastUpdated: Timestamp;
     }
     
@@ -47,6 +49,16 @@
     let prerequisitesInput: string = editingCourse?.prerequisites || '';
     let curriculumInput: string = editingCourse?.curriculum || '';
     let course_feeInput: string = editingCourse?.course_fee || '';
+    let courseImageInput: File | null = null;
+
+    const storage = getStorage();
+
+    async function handleImageUpload(event: Event) {
+      const target = event.target as HTMLInputElement;
+      if (target.files && target.files.length > 0) {
+        courseImageInput = target.files[0];
+      }
+    }
   
     async function saveCourse() {
       const courseData: CourseData = {
@@ -63,6 +75,27 @@
       };
       
       try {
+        let courseImageUrl: string | null = null;
+
+        if (courseImageInput) {
+          const storageRef = ref(storage, `course_images/${courseImageInput.name}`);
+          const uploadTask = uploadBytesResumable(storageRef, courseImageInput);
+
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              // Handle progress if needed
+            },
+            (error) => {
+              console.error("Error uploading image:", error);
+            },
+            async () => {
+              courseImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              courseData.courseImageUrl = courseImageUrl;
+            }
+          );
+        }
+
         if (editingCourse) {
           const courseDocRef = doc(db, 'courses', editingCourse.id);
           await updateDoc(courseDocRef, { ...courseData, lastUpdated: serverTimestamp() } );
@@ -77,8 +110,15 @@
         courseInput = "";
         softwareInput = "";
         durationInput = 0;
+        courseImageInput = null;
       } catch (error) {
         console.error("Error updating/adding course: ", error);
+      }finally {
+        courseInput = "";
+        softwareInput = "";
+        durationInput = 0;
+        courseImageInput = null;
+        closeDialog(); 
       }
     }
     
@@ -133,6 +173,16 @@
         <div class="grid gap-2">
           <Label for="course_fee">Course Fee</Label>
           <Input id="course_fee" class="w-64" placeholder="Enter course fee" bind:value={course_feeInput} />
+        </div>
+        <div class="grid gap-2">
+          <Label for="course_image">Course Image</Label>
+          <Input
+            id="course_image"
+            class="w-64"
+            type="file"
+            accept="image/*"
+            on:change={handleImageUpload}
+          />
         </div>
       </div>
       <Dialog.Footer>

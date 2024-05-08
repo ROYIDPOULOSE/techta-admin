@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-    import { Select } from '$lib/components/ui/select';
     import AddCourse from '$lib/components/addCourse/+page.svelte';
     import CourseCard from '$lib/components/courseCard/+page.svelte'
     import { onSnapshot, collection, Timestamp } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
-
     interface CourseData {
         id: string;
         course_name: string;
