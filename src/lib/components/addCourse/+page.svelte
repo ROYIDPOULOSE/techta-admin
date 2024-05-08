@@ -36,7 +36,7 @@
       prerequisites: string;
       curriculum: string;
       course_fee: string;
-      courseImageUrl?: string;
+      courseImageUrl?: string | null;
       lastUpdated: Timestamp | FieldValue;
     }
     
@@ -81,23 +81,23 @@
           const storageRef = ref(storage, `course_images/${courseImageInput.name}`);
           const uploadTask = uploadBytesResumable(storageRef, courseImageInput);
 
-          await new Promise((resolve, reject) => {
+          courseImageUrl = await new Promise((resolve, reject) => {
             uploadTask.on(
-              "state_changed",
+              'state_changed',
               (snapshot) => {
                 // Handle progress if needed
               },
               (error) => {
-                console.error("Error uploading image:", error);
+                console.error('Error uploading image:', error);
                 reject(error);
               },
               async () => {
-                courseImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                courseData.courseImageUrl = courseImageUrl;
-                resolve(null);
+                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                resolve(url);
               }
             );
           });
+          courseData.courseImageUrl = courseImageUrl;
         }
 
         if (editingCourse) {
