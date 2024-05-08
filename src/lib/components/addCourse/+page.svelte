@@ -81,19 +81,23 @@
           const storageRef = ref(storage, `course_images/${courseImageInput.name}`);
           const uploadTask = uploadBytesResumable(storageRef, courseImageInput);
 
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              // Handle progress if needed
-            },
-            (error) => {
-              console.error("Error uploading image:", error);
-            },
-            async () => {
-              courseImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-              courseData.courseImageUrl = courseImageUrl;
-            }
-          );
+          await new Promise((resolve, reject) => {
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                // Handle progress if needed
+              },
+              (error) => {
+                console.error("Error uploading image:", error);
+                reject(error);
+              },
+              async () => {
+                courseImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                courseData.courseImageUrl = courseImageUrl;
+                resolve(null);
+              }
+            );
+          });
         }
 
         if (editingCourse) {
@@ -106,11 +110,6 @@
           const newCourse = { id: docRef.id, ...courseData };
           dispatch('update', newCourse);
         }
-        
-        courseInput = "";
-        softwareInput = "";
-        durationInput = 0;
-        courseImageInput = null;
       } catch (error) {
         console.error("Error updating/adding course: ", error);
       }finally {
