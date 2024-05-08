@@ -13,6 +13,8 @@
       serverTimestamp,
     } from "firebase/firestore";
     import { db } from "$lib/services/firebase";
+    import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+    import { storage } from '$lib/services/firebase';
   
     const dispatch = createEventDispatcher();
     export let open: boolean = false;
@@ -24,6 +26,14 @@
   
     let software_name: string = editingSoftware?.software_name || "";
     let duration: string = editingSoftware?.duration || "";
+    let softwareImage: File | null = null;
+
+    async function handleImageUpload(event: Event) {
+        const target = event.target as HTMLInputElement;
+        if (target.files && target.files.length > 0) {
+            softwareImage = target.files[0];
+        }
+    }
   
     async function saveSoftware() {
       const softwareData = {
@@ -33,6 +43,30 @@
       };
   
       try {
+        let imageUrl: string | null = null;
+        if (softwareImage) {
+        const storageRef = ref(storage, `software/${softwareImage.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, softwareImage);
+
+        imageUrl = await new Promise<string | null>((resolve, reject) => {
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    // Handle progress if needed
+                },
+                (error) => {
+                    console.error('Error uploading image:', error);
+                    reject(null);
+                },
+                async () => {
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve(url);
+                }
+                );
+            });
+        }
+        const data = { ...softwareData, imageUrl };
+
         if (editingSoftware) {
           const softwareDocRef = doc(db, "software", editingSoftware.id);
           await updateDoc(softwareDocRef, {
@@ -49,6 +83,7 @@
   
         software_name = "";
         duration = "";
+        softwareImage = null;
       } catch (error) {
         console.error("Error updating/adding student: ", error);
       }
@@ -85,6 +120,16 @@
               placeholder="60"
               class="col-span-3"
               bind:value={duration}
+            />
+          </div>
+          <div class="grid grid-cols-4 items-center gap-4">
+            <Label for="image" class="text-right">Software Image</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              class="col-span-3"
+              on:change={handleImageUpload}
             />
           </div>
         </div>
