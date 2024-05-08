@@ -22,6 +22,7 @@ export const menuItems: MenuItem[] = [
       name: "Cources",
       icon: "fa-tag",
       items: [
+        { name: "Softwares", page: "admin/course/softwares" },
         { name: "Individual Software", page: "admin/course/individualCourse" },
         { name: "Package", page: "admin/course/package" }
       ]
