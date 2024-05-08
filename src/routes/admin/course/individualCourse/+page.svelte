@@ -16,13 +16,7 @@
         schedule: string;
         prerequisites: string;
         curriculum: string;
-        exam_details: string;
-        instructor: string;
         course_fee: string;
-        reviews: string;
-        faqs: string;
-        registration: string;
-        contact_information: string
         lastUpdated: Timestamp;
     }
 

@@ -19,13 +19,7 @@
       schedule: string;
       prerequisites: string;
       curriculum: string;
-      exam_details: string;
-      instructor: string;
       course_fee: string;
-      reviews: string;
-      faqs: string;
-      registration: string;
-      contact_information: string
     } | null = null;
 
     
@@ -40,13 +34,7 @@
       schedule: string;
       prerequisites: string;
       curriculum: string;
-      exam_details: string;
-      instructor: string;
       course_fee: string;
-      reviews: string;
-      faqs: string;
-      registration: string;
-      contact_information: string
       lastUpdated: Timestamp;
     }
     
@@ -58,13 +46,7 @@
     let scheduleInput: string = editingCourse?.schedule || '';
     let prerequisitesInput: string = editingCourse?.prerequisites || '';
     let curriculumInput: string = editingCourse?.curriculum || '';
-    let exam_detailsInput: string = editingCourse?.exam_details || '';
-    let instructorInput: string = editingCourse?.instructor || '';
     let course_feeInput: string = editingCourse?.course_fee || '';
-    let reviewsInput: string = editingCourse?.reviews || '';
-    let faqsInput: string = editingCourse?.faqs || '';
-    let registrationInput: string = editingCourse?.registration || '';
-    let contact_informationInput: string = editingCourse?.contact_information || '';
   
     async function saveCourse() {
       const courseData: CourseData = {
@@ -76,13 +58,7 @@
         schedule: scheduleInput,
         prerequisites: prerequisitesInput,
         curriculum: curriculumInput,
-        exam_details: exam_detailsInput,
-        instructor: instructorInput,
         course_fee: course_feeInput,
-        reviews: reviewsInput,
-        faqs: faqsInput,
-        registration: registrationInput,
-        contact_information: contact_informationInput,
         lastUpdated: serverTimestamp() as Timestamp,
       };
       
@@ -155,32 +131,8 @@
           <Input id="curriculum" class="w-64" placeholder="Enter curriculum" bind:value={curriculumInput} />
         </div>
         <div class="grid gap-2">
-          <Label for="exam_details">Exam Details</Label>
-          <Input id="exam_details" class="w-64" placeholder="Enter exam details" bind:value={exam_detailsInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="instructor">Instructor</Label>
-          <Input id="instructor" class="w-64" placeholder="Enter instructor" bind:value={instructorInput} />
-        </div>
-        <div class="grid gap-2">
           <Label for="course_fee">Course Fee</Label>
           <Input id="course_fee" class="w-64" placeholder="Enter course fee" bind:value={course_feeInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="reviews">Reviews</Label>
-          <Input id="reviews" class="w-64" placeholder="Enter reviews" bind:value={reviewsInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="faqs">FAQs</Label>
-          <Input id="faqs" class="w-64" placeholder="Enter FAQs" bind:value={faqsInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="registration">Registration</Label>
-          <Input id="registration" class="w-64" placeholder="Enter registration details" bind:value={registrationInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="contact_information">Contact Information</Label>
-          <Input id="contact_information" class="w-64" placeholder="Enter contact information" bind:value={contact_informationInput} />
         </div>
       </div>
       <Dialog.Footer>
