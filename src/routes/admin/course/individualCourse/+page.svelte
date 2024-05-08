@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
     import AddCourse from '$lib/components/addCourse/+page.svelte';
     import CourseCard from '$lib/components/courseCard/+page.svelte'
-    import { onSnapshot, collection, Timestamp } from 'firebase/firestore';
+    import { onSnapshot, collection, Timestamp, FieldValue } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
     interface CourseData {
         id: string;
@@ -15,7 +15,7 @@
         prerequisites: string;
         curriculum: string;
         course_fee: string;
-        lastUpdated: Timestamp;
+        lastUpdated: Timestamp | FieldValue;
     }
 
     let showDialog: boolean = false;
@@ -23,16 +23,14 @@
     let editingCourse: CourseData | null = null;
     let sortOrder: 'lastUpdated' | 'oldestFirst' = 'lastUpdated';
 
-    // Fetch courses from Firestore
     const unsubscribe = onSnapshot(collection(db, 'courses'), (snapshot) => {
-        // courses = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as CourseData));
         courses = snapshot.docs.map((doc) => {
             const data = doc.data();
             const lastUpdated = data.lastUpdated ? new Timestamp(data.lastUpdated.seconds, data.lastUpdated.nanoseconds) : null;
             return {
             id: doc.id,
             ...data,
-            lastUpdated, // Use the created Timestamp object
+            lastUpdated,
             } as CourseData;
         });
     });
@@ -73,20 +71,24 @@
 
         if (sortOrder === 'oldestFirst') {
             sortedCourses = sortedCourses.sort((a, b) => {
-                const aTime = a.lastUpdated ? a.lastUpdated.toDate().getTime() : 0;
-                const bTime = b.lastUpdated ? b.lastUpdated.toDate().getTime() : 0;
-                return aTime - bTime;
+            const aTime = isTimestamp(a.lastUpdated) ? a.lastUpdated.toDate().getTime() : 0;
+            const bTime = isTimestamp(b.lastUpdated) ? b.lastUpdated.toDate().getTime() : 0;
+            return aTime - bTime;
             });
         } else {
             sortedCourses = sortedCourses.sort((a, b) => {
-                const aTime = a.lastUpdated ? a.lastUpdated.toDate().getTime() : 0;
-                const bTime = b.lastUpdated ? b.lastUpdated.toDate().getTime() : 0;
-                return bTime - aTime;
+            const aTime = isTimestamp(a.lastUpdated) ? a.lastUpdated.toDate().getTime() : 0;
+            const bTime = isTimestamp(b.lastUpdated) ? b.lastUpdated.toDate().getTime() : 0;
+            return bTime - aTime;
             });
         }
 
         courses = sortedCourses;
-        }
+    }
+
+    function isTimestamp(value: Timestamp | FieldValue): value is Timestamp {
+        return (value as Timestamp).toDate !== undefined;
+    }
 
     function setSortOrder(order: 'lastUpdated' | 'oldestFirst') {
         sortOrder = order;

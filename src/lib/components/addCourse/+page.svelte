@@ -4,7 +4,7 @@
     import { Button } from "$lib/components/ui/button";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { createEventDispatcher } from 'svelte';
-    import { collection, addDoc, doc, updateDoc, Timestamp, serverTimestamp } from "firebase/firestore";
+    import { collection, addDoc, doc, updateDoc, Timestamp, FieldValue, serverTimestamp } from "firebase/firestore";
     import { db } from "$lib/services/firebase";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
@@ -37,7 +37,7 @@
       curriculum: string;
       course_fee: string;
       courseImageUrl?: string;
-      lastUpdated: Timestamp;
+      lastUpdated: Timestamp | FieldValue;
     }
     
     let courseInput: string = editingCourse?.course_name || '';
@@ -71,7 +71,7 @@
         prerequisites: prerequisitesInput,
         curriculum: curriculumInput,
         course_fee: course_feeInput,
-        lastUpdated: serverTimestamp() as Timestamp,
+        lastUpdated: serverTimestamp(),
       };
       
       try {
