@@ -3,6 +3,18 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
+    import { goto } from '$app/navigation';
+
+    let email: string = '';
+    let password: string = '';
+
+    function handleLogin() {
+        if (email === 'admin' && password === 'admin') {
+            goto('/admin/dashboard');
+        } else {
+            alert('Invalid email or password');
+        }
+    }
 </script>
 
 <div class="container">
@@ -14,15 +26,15 @@
         <Card.Content class="grid gap-4">
             <div class="grid gap-2">
                 <Label for="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" required bind:value={email} />
             </div>
             <div class="grid gap-2">
                 <Label for="password">Password</Label>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required bind:value={password}/>
             </div>
         </Card.Content>
         <Card.Footer>
-            <Button class="w-full">Sign in</Button>
+            <Button class="w-full" on:click={handleLogin}>Sign in</Button>
         </Card.Footer>
     </Card.Root>
 </div>
