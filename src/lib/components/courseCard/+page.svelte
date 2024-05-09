@@ -2,9 +2,12 @@
 	import * as Card from '$lib/components/ui/card';
     import { Button } from '$lib/components/ui/button';
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-    import { deleteDoc, doc } from 'firebase/firestore';
+    import { getDoc, deleteDoc, doc } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
     import { createEventDispatcher } from 'svelte';
+    import { getStorage, ref, deleteObject } from 'firebase/storage';
+
+    const storage = getStorage();
 
     export let course: { 
       id: string; 
@@ -22,15 +25,41 @@
     const dispatch = createEventDispatcher();
 
     function handleDelete() {
-        const courseDocRef = doc(db, 'courses', course.id);
-        deleteDoc(courseDocRef)
-        .then(() => {
-            console.log('Course deleted successfully');
-            // You can add any additional logic here, like showing a success message or updating the UI
-        })
-        .catch((error) => {
-            console.error('Error deleting course: ', error);
-            // You can add error handling logic here
+      const courseDocRef = doc(db, 'courses', course.id);
+
+  // Get the document data first
+        getDoc(courseDocRef)
+          .then((docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const courseData = docSnapshot.data();
+              const imageUrl = courseData.courseImageUrl;
+
+              // Delete the document
+              deleteDoc(courseDocRef)
+                .then(() => {
+                  console.log('Course deleted successfully');
+
+                  // If there's an image URL, delete the image from Storage
+                  if (imageUrl) {
+                    const imageRef = ref(storage, imageUrl);
+                    deleteObject(imageRef)
+                      .then(() => {
+                        console.log('Image deleted successfully');
+                      })
+                      .catch((error) => {
+                        console.error('Error deleting image: ', error);
+                      });
+                  }
+                })
+                .catch((error) => {
+                  console.error('Error deleting course: ', error);
+                });
+            } else {
+              console.log('No such document');
+            }
+          })
+          .catch((error) => {
+            console.error('Error getting document: ', error);
         });
     }
 
