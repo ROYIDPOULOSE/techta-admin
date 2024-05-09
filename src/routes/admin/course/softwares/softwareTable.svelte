@@ -33,14 +33,12 @@
     <Table.Header>
       <Table.Row>
         <Table.Head>Software Name</Table.Head>
-        <Table.Head>doration</Table.Head>
-        <!-- <Table.Head class="text-right">Actions</Table.Head> -->
+        <Table.Head>Duration</Table.Head>
       </Table.Row>
     </Table.Header>
     <Table.Body>
       {#each softwares as software, i (software.id)}
         <Table.Row>
-          <!-- <Table.Cell class="font-medium">{software.id}</Table.Cell> -->
           <Table.Cell>{software.software_name}</Table.Cell>
           <Table.Cell>{software.duration}</Table.Cell>
           <Table.Cell class="text-right">
