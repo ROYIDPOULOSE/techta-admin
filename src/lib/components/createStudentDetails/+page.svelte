@@ -40,7 +40,7 @@
       const coursesSnapshot = await getDocs(coursesCollection);
       courses = coursesSnapshot.docs.map((doc) => ({
         id: doc.id,
-        course: doc.data().course,
+        course: doc.data().course_name,
       }));
     }
   
