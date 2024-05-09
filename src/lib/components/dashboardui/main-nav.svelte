@@ -8,9 +8,9 @@
 	export { className as class };
 
 	async function navigate(page: string) {
-    const navigateTo = page.startsWith('/') ? page : `/${page}`;
-    await goto(navigateTo);
-    // window.location.href = navigateTo;
+		const navigateTo = page.startsWith('/') ? page : `/${page}`;
+		await goto(navigateTo);
+		// window.location.href = navigateTo;
 	}
 </script>
 
