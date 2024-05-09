@@ -25,6 +25,6 @@
 			<DropdownMenu.Item on:click={() => goto('/settings-general')}>Profile</DropdownMenu.Item>
 		</DropdownMenu.Group>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item>Log out</DropdownMenu.Item>
+		<DropdownMenu.Item on:click={() => goto('/login')}>Log out</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
