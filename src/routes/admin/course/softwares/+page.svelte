@@ -1,18 +1,34 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-    import { Timestamp } from 'firebase/firestore';
     import AddSodtware from '$lib/components/addSoftware/+page.svelte'
-
+    import SoftwareTable from './softwareTable.svelte';
+    import { db } from '$lib/services/firebase';
+    import { onSnapshot, collection, Timestamp } from 'firebase/firestore';
     interface SoftwareData {
         id: string;
         software_name: string;
         duration: string;
+        imageUrl: string;
         lastUpdated: Timestamp;
     }
 
     let showDialog: boolean = false;
     let software: SoftwareData[] = [];
     let editingSoftware: SoftwareData | null = null;
+
+    const unsubscribe = onSnapshot(collection(db, 'software'), (snapshot) => {
+        software = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            const lastUpdated = data.lastUpdated
+                ? new Timestamp(data.lastUpdated.seconds, data.lastUpdated.nanoseconds)
+                : null;
+            return {
+                id: doc.id,
+                ...data,
+                lastUpdated, // Use the created Timestamp object
+            } as SoftwareData;
+        });
+    });
     
     function toggleForm(software: SoftwareData | null = null) {
         editingSoftware = software;
@@ -47,6 +63,7 @@
 
 </script>
 
+
 <div class="m-3 bg-background text-foreground rounded-md p-4 px-6 border">
 	<div class="flex items-center">
 		<h2 class="text-3xl font-bold tracking-tight text-gray-800 dark:text-gray-200 flex-1">
@@ -60,20 +77,27 @@
 			</Button>
 		</div>
 	</div>
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 p-4">
-        <!-- {#each courses as course}
-            <CourseCard {course} on:edit={handleEditCourse}/>
-        {/each} -->
+	<div class="table-container">
+        <SoftwareTable softwares={software} on:edit={handleEditSoftware} />
     </div>
 </div>
 
 <div class="abc">
     {#if showDialog}
         <AddSodtware
-            open={showDialog}
+        open={showDialog}
             on:close={closeDialog}
             editingSoftware={editingSoftware}
             on:update={(event) => handleUpdateSoftware(event)}
             />
     {/if}
 </div>
+
+<style>
+    .table-container {
+      width: 100%;
+      height: calc(100vh - 64px); /* Subtract the height of any fixed header or navigation */
+      overflow: auto;
+      padding: 2rem;
+    }
+</style>
