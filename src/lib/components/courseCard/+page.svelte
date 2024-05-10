@@ -66,7 +66,6 @@
         dispatch('edit', course);
     }
 
-    console.log('courseImageUrl:', course.courseImageUrl);
 </script>
 
 <div>
