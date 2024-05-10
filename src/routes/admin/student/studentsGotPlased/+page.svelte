@@ -34,22 +34,29 @@
           <p class="text-gray-600 mb-3 text-xs leading-tight">
             This is a short description of the course. It provides an overview of what the course covers and what students can expect to learn.
           </p>
-          <div class="flex mb-2 flex-wrap">
+          <div class="inline-flex flex-wrap space-x-reverse space-x-1">
             <div class="flex items-center">
               <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
-              <span class="text-xs font-semibold whitespace-nowrap">Autodesk Construction Cloud</span>
+              <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
             </div>
             <div class="flex items-center">
               <img src="/images/son.png" alt="Instructor 1" class="w-6 h-6 rounded-full mr-2" />
-              <span class="text-xs font-semibold whitespace-nowrap">AutoCAD</span>
+              <span class="text-xs font-semibold">AutoCAD</span>
             </div>
             <div class="flex items-center">
               <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
-              <span class="text-xs font-semibold whitespace-nowrap">Jijojo math</span>
+              <span class="text-xs font-semibold">Jijojo math</span>
+            </div>
+            <div class="flex items-center">
+              <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
+              <span class="text-xs font-semibold">Jijojo math</span>
+            </div>
+            <div class="flex items-center">
+              <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
+              <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
             </div>
           </div>
         </Card.Content>
-      
         <Card.Footer class="bg-gray-100 p-3 flex justify-between items-center">
             <div>
                 <p class="font-semibold text-sm">8 hours</p>
