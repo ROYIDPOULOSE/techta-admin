@@ -32,7 +32,7 @@ export const menuItems: MenuItem[] = [
       icon: "fa-user",
       items: [
         { name: "Student Details", page: "admin/student/studentDetails" },
-        { name: "Students got placed", page: "reviews" }
+        { name: "Students got placed", page: "admin/student/studentsGotPlased" }
       ]
     },
     {
