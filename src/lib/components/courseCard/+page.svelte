@@ -27,19 +27,16 @@
     function handleDelete() {
       const courseDocRef = doc(db, 'courses', course.id);
 
-  // Get the document data first
         getDoc(courseDocRef)
           .then((docSnapshot) => {
             if (docSnapshot.exists()) {
               const courseData = docSnapshot.data();
               const imageUrl = courseData.courseImageUrl;
 
-              // Delete the document
               deleteDoc(courseDocRef)
                 .then(() => {
                   console.log('Course deleted successfully');
 
-                  // If there's an image URL, delete the image from Storage
                   if (imageUrl) {
                     const imageRef = ref(storage, imageUrl);
                     deleteObject(imageRef)
@@ -91,4 +88,4 @@
       <p class="text-xs text-muted-foreground">{course.software}</p>
       <p class="text-xs text-muted-foreground">{course.duration} hours</p>
     </Card.Content>
-  </Card.Root>
+</Card.Root>
