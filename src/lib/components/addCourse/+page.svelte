@@ -7,6 +7,7 @@
     import { collection, addDoc, doc, updateDoc, Timestamp, FieldValue, serverTimestamp } from "firebase/firestore";
     import { db } from "$lib/services/firebase";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+    import { Textarea } from "$lib/components/ui/textarea";
 
     const dispatch = createEventDispatcher();
     export let open:boolean = false;
@@ -151,7 +152,7 @@
         </div>
         <div class="grid gap-2">
           <Label for="course_description">Course Description</Label>
-          <Input id="course_description" class="w-64" placeholder="Enter course description" bind:value={discriptionInput} />
+          <Textarea  id="course_description" class="w-64" placeholder="Enter course description" bind:value={discriptionInput} />
         </div>
         <div class="grid gap-2">
           <Label for="delivery_mode">Delivery Mode</Label>
