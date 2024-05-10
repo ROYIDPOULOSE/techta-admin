@@ -1,11 +1,12 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
-    import { Button } from '$lib/components/ui/button';
-    import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-    import { getDoc, deleteDoc, doc } from 'firebase/firestore';
-    import { db } from '$lib/services/firebase';
-    import { createEventDispatcher } from 'svelte';
-    import { getStorage, ref, deleteObject } from 'firebase/storage';
+  import { Button } from '$lib/components/ui/button';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+  import { getDoc, deleteDoc, doc } from 'firebase/firestore';
+  import { db } from '$lib/services/firebase';
+  import { createEventDispatcher } from 'svelte';
+  import { getStorage, ref, deleteObject } from 'firebase/storage';
+  import { Ellipsis } from 'lucide-svelte';
 
     const storage = getStorage();
 
@@ -20,6 +21,7 @@
       prerequisites: string;
       curriculum: string;
       course_fee: string;
+      courseImageUrl: string;
      };
 
     const dispatch = createEventDispatcher();
@@ -63,29 +65,68 @@
     function handleEdit() {
         dispatch('edit', course);
     }
+
+    console.log('courseImageUrl:', course.courseImageUrl);
 </script>
 
-<Card.Root>
-    <Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-      <Card.Title class="text-sm font-bold">{course.course_name}</Card.Title>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger>
-          <Button variant="ghost" size="sm">
-            <span>&#8230;</span>
-          </Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          <DropdownMenu.Item on:click={handleEdit}>
-            <span>Edit</span>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item on:click={handleDelete}>
-            <span>Delete</span>
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu.Root>
-    </Card.Header>
-    <Card.Content>
-      <p class="text-xs text-muted-foreground">{course.software}</p>
-      <p class="text-xs text-muted-foreground">{course.duration} hours</p>
-    </Card.Content>
-</Card.Root>
+<div>
+  <Card.Root class="w-60 rounded-lg shadow-md overflow-hidden transition-transform duration-300 transform-gpu hover:scale-105 hover:shadow-2xl">
+      <div class="relative">
+        <img src={course.courseImageUrl} alt="Header Image" class="w-full h-24 object-cover" />
+        <div class="absolute top-2 right-2">
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <Button variant="ghost" size="sm" class="bg-white bg-opacity-30 rounded-full p-0">
+                  <Ellipsis />
+              </Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <DropdownMenu.Item on:click={handleEdit}>
+                <span>Edit</span>
+              </DropdownMenu.Item>
+              <DropdownMenu.Item on:click={handleDelete}>
+                <span>Delete</span>
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        </div>
+      </div>
+    
+      <Card.Content class="p-3">
+        <h2 class="text-base font-bold mb-1 leading-tight">{course.course_name}</h2>
+        <p class="text-gray-600 mb-3 text-xs leading-tight">
+          {course.course_discription}
+        </p>
+        <div class="inline-flex flex-wrap space-x-reverse space-x-1">
+          <div class="flex items-center">
+            <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
+            <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
+          </div>
+          <div class="flex items-center">
+            <img src="/images/son.png" alt="Instructor 1" class="w-6 h-6 rounded-full mr-2" />
+            <span class="text-xs font-semibold">{course.software}</span>
+          </div>
+          <div class="flex items-center">
+            <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
+            <span class="text-xs font-semibold">Jijojo math</span>
+          </div>
+          <div class="flex items-center">
+            <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
+            <span class="text-xs font-semibold">Jijojo math</span>
+          </div>
+          <div class="flex items-center">
+            <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
+            <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
+          </div>
+        </div>
+      </Card.Content>
+      <Card.Footer class="bg-gray-100 p-3 flex justify-between items-center">
+          <div>
+              <p class="font-semibold text-sm">{course.duration} minutes</p>
+          </div>
+          <div>
+              <p class="font-semibold text-sm">₹2,000</p>
+          </div>
+      </Card.Footer>
+  </Card.Root>
+</div>
