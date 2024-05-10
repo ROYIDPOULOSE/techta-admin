@@ -15,6 +15,7 @@
         prerequisites: string;
         curriculum: string;
         course_fee: string;
+        courseImageUrl: string;
         lastUpdated: Timestamp | FieldValue;
     }
 
@@ -118,7 +119,7 @@
             </select>
         </div>
 	</div>
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4 p-4">
+	<div class="grid  md:grid-cols-5 lg:grid-cols-5 p-4">
         {#each courses as course}
             <CourseCard {course} on:edit={handleEditCourse}/>
         {/each}

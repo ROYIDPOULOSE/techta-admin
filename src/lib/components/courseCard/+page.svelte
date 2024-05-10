@@ -68,7 +68,6 @@
 
 </script>
 
-<div>
   <Card.Root class="w-60 rounded-lg shadow-md overflow-hidden transition-transform duration-300 transform-gpu hover:scale-105 hover:shadow-2xl">
       <div class="relative">
         <img src={course.courseImageUrl} alt="Header Image" class="w-full h-24 object-cover" />
@@ -119,7 +118,8 @@
           </div>
         </div>
       </Card.Content>
-      <Card.Footer class="bg-gray-100 p-3 flex justify-between items-center">
+
+      <Card.Footer class="p-3 flex justify-between items-center">
           <div>
               <p class="font-semibold text-sm">{course.duration} minutes</p>
           </div>
@@ -128,4 +128,3 @@
           </div>
       </Card.Footer>
   </Card.Root>
-</div>
