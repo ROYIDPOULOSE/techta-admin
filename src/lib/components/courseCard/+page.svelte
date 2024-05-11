@@ -108,26 +108,10 @@
           {/if}
         </p>
         <div class="inline-flex flex-wrap space-x-reverse space-x-1">
-          <!-- <div class="flex items-center">
-            <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
-            <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
-          </div> -->
           <div class="flex items-center">
             <img src="/images/son.png" alt="Instructor 1" class="w-6 h-6 rounded-full mr-2" />
             <span class="text-xs font-semibold">{course.software}</span>
           </div>
-          <!-- <div class="flex items-center">
-            <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
-            <span class="text-xs font-semibold">Jijojo math</span>
-          </div>
-          <div class="flex items-center">
-            <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
-            <span class="text-xs font-semibold">Jijojo math</span>
-          </div>
-          <div class="flex items-center">
-            <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
-            <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
-          </div> -->
         </div>
       </Card.Content>
 
