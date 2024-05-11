@@ -7,7 +7,7 @@
     interface CourseData {
         id: string;
         course_name: string;
-        software: string;
+        software: string[];
         duration: number;
         course_discription: string;
         delivery_mode: string;

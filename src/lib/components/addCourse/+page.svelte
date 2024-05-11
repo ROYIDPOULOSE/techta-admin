@@ -4,17 +4,19 @@
     import { Button } from "$lib/components/ui/button";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { createEventDispatcher } from 'svelte';
-    import { collection, addDoc, doc, updateDoc, Timestamp, FieldValue, serverTimestamp } from "firebase/firestore";
+    import { collection, getDocs, addDoc, doc, updateDoc, Timestamp, FieldValue, serverTimestamp } from "firebase/firestore";
     import { db } from "$lib/services/firebase";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
     import { Textarea } from "$lib/components/ui/textarea";
+    import * as Select from "$lib/components/ui/select/index.js";
+    import { onMount } from 'svelte';
 
     const dispatch = createEventDispatcher();
     export let open:boolean = false;
     export let editingCourse: { 
       id: string; 
       course_name: string; 
-      software: string; 
+      software: string[]; 
       duration: number;
       course_discription: string;
       delivery_mode: string;
@@ -29,7 +31,7 @@
       [key: string]: any; // Index signature to allow dynamic property access
       id?: string;
       course_name: string;
-      software: string;
+      software: string[];
       duration: number;
       course_discription: string;
       delivery_mode: string;
@@ -42,7 +44,7 @@
     }
     
     let courseInput: string = editingCourse?.course_name || '';
-    let softwareInput: string = editingCourse?.software || '';
+    let softwareInput: string[] = editingCourse?.software ?? [];
     let durationInput: number = editingCourse?.duration || 0;
     let discriptionInput: string = editingCourse?.course_discription || '';
     let deliveryInput: string = editingCourse?.delivery_mode || '';
@@ -51,8 +53,18 @@
     let curriculumInput: string = editingCourse?.curriculum || '';
     let course_feeInput: string = editingCourse?.course_fee || '';
     let courseImageInput: File | null = null;
-
+    let softwares: { id: string; name: string }[] = [];
+    
     const storage = getStorage();
+
+    onMount(async () => {
+      const softwareCollection = collection(db, 'software');
+      const softwareSnapshot = await getDocs(softwareCollection);
+      softwares = softwareSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().software_name,
+      }));
+    });
 
     async function handleImageUpload(event: Event) {
       const target = event.target as HTMLInputElement;
@@ -115,7 +127,7 @@
         console.error("Error updating/adding course: ", error);
       }finally {
         courseInput = "";
-        softwareInput = "";
+        softwareInput = [];
         durationInput = 0;
         courseImageInput = null;
         closeDialog(); 
@@ -125,7 +137,7 @@
     function closeDialog() {
       dispatch('close');
       courseInput = '';
-      softwareInput = '';
+      softwareInput = [];
       durationInput = 0;
     }
   </script>
@@ -144,7 +156,15 @@
         </div>
         <div class="grid gap-2">
           <Label for="software">Software</Label>
-          <Input id="software" class="w-64" placeholder="Auto CAD" bind:value={softwareInput} />
+          <select
+            id="software"
+            class="w-64"
+            multiple
+            bind:value={softwareInput}>
+            {#each softwares as software}
+              <option value={software.id}>{software.name}</option>
+            {/each}
+          </select>
         </div>
         <div class="grid gap-2">
           <Label for="duration">Duration</Label>
