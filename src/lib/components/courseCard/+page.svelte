@@ -9,11 +9,12 @@
   import { Ellipsis } from 'lucide-svelte';
 
     const storage = getStorage();
+    let isExpanded = false;
 
     export let course: { 
       id: string; 
       course_name: string; 
-      software: string; 
+      software: string[]; 
       duration: number;
       course_discription: string;
       delivery_mode: string;
@@ -66,6 +67,10 @@
         dispatch('edit', course);
     }
 
+    function toggleExpand() {
+      isExpanded = !isExpanded;
+    }
+
 </script>
 
   <Card.Root class="w-60 rounded-lg shadow-md overflow-hidden transition-transform duration-300 transform-gpu hover:scale-105 hover:shadow-2xl">
@@ -92,19 +97,26 @@
     
       <Card.Content class="p-3">
         <h2 class="text-base font-bold mb-1 leading-tight">{course.course_name}</h2>
-        <p class="text-gray-600 mb-3 text-xs leading-tight">
+        <p class="text-gray-600 mb-3 text-xs leading-tight overflow-hidden {isExpanded ? 'line-clamp-none' : 'line-clamp-2'}"
+        on:click={toggleExpand}>
           {course.course_discription}
+          {#if !isExpanded}
+            <span>
+              ...
+              <!-- <span class="text-gray-600 cursor-pointer" aria-label="Show more" on:click={toggleExpand}>more</span> -->
+            </span>
+          {/if}
         </p>
         <div class="inline-flex flex-wrap space-x-reverse space-x-1">
-          <div class="flex items-center">
+          <!-- <div class="flex items-center">
             <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
             <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
-          </div>
+          </div> -->
           <div class="flex items-center">
             <img src="/images/son.png" alt="Instructor 1" class="w-6 h-6 rounded-full mr-2" />
             <span class="text-xs font-semibold">{course.software}</span>
           </div>
-          <div class="flex items-center">
+          <!-- <div class="flex items-center">
             <img src="/images/img1.webp" alt="Instructor 3" class="w-6 h-6 rounded-full mr-2" />
             <span class="text-xs font-semibold">Jijojo math</span>
           </div>
@@ -115,7 +127,7 @@
           <div class="flex items-center">
             <img src="/images/wife.jpg" alt="Instructor 2" class="w-6 h-6 rounded-full mr-2" />
             <span class="text-xs font-semibold">Autodesk Construction Cloud</span>
-          </div>
+          </div> -->
         </div>
       </Card.Content>
 
@@ -128,3 +140,21 @@
           </div>
       </Card.Footer>
   </Card.Root>
+
+  <style>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .line-clamp-2:hover {
+      cursor: pointer;
+    }
+
+    .line-clamp-none {
+      -webkit-line-clamp: unset;
+    }
+  </style>
