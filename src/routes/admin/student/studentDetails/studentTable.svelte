@@ -34,7 +34,7 @@
       <Table.Row>
         <Table.Head class="w-[100px]">Student ID</Table.Head>
         <Table.Head>Name</Table.Head>
-        <Table.Head>Address</Table.Head>
+        <Table.Head>Email</Table.Head>
         <Table.Head>Phone</Table.Head>
         <Table.Head>Status</Table.Head>
         <Table.Head>Course</Table.Head>
@@ -46,7 +46,7 @@
         <Table.Row>
           <Table.Cell class="font-medium">{student.id}</Table.Cell>
           <Table.Cell>{student.name}</Table.Cell>
-          <Table.Cell>{student.address}</Table.Cell>
+          <Table.Cell>{student.email}</Table.Cell>
           <Table.Cell>{student.phone}</Table.Cell>
           <Table.Cell>{student.status}</Table.Cell>
           <Table.Cell>{student.course}</Table.Cell>
