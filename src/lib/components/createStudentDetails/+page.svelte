@@ -21,14 +21,14 @@
     export let editingStudent: {
       id: string;
       name: string;
-      address: string;
+      email: string;
       phone: string;
       status: string;
       course: string;
     } | null = null;
   
     let name: string = editingStudent?.name || "";
-    let address: string = editingStudent?.address || "";
+    let email: string = editingStudent?.email || "";
     let phone: string = editingStudent?.phone || "";
     let status: string = editingStudent?.status || "";
     let course: string = editingStudent?.course || "";
@@ -49,7 +49,7 @@
     async function saveStudent() {
       const studentData = {
         name,
-        address,
+        email,
         phone,
         status,
         course,
@@ -72,7 +72,7 @@
         }
   
         name = "";
-        address = "";
+        email = "";
         phone = "";
         status = "";
         course = "";
@@ -84,7 +84,7 @@
     function closeDialog() {
       dispatch("close");
       name = "";
-      address = "";
+      email = "";
       phone = "";
       status = "";
       course = "";
@@ -109,12 +109,12 @@
             />
           </div>
           <div class="grid grid-cols-4 items-center gap-4">
-            <Label for="address" class="text-right">Address</Label>
+            <Label for="email" class="text-right">Email</Label>
             <Input
-              id="address"
-              placeholder="123 Main St."
+              id="email"
+              placeholder="student@demo.com"
               class="col-span-3"
-              bind:value={address}
+              bind:value={email}
             />
           </div>
           <div class="grid grid-cols-4 items-center gap-4">
