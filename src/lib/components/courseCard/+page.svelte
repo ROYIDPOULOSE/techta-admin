@@ -6,10 +6,13 @@
   import { db } from '$lib/services/firebase';
   import { createEventDispatcher } from 'svelte';
   import { getStorage, ref, deleteObject } from 'firebase/storage';
+  import { getFirestore, collection, getDocs } from "firebase/firestore";
+  import { onMount } from 'svelte';
   import { Ellipsis } from 'lucide-svelte';
 
     const storage = getStorage();
     let isExpanded = false;
+    let softwareData: { name: string; imageUrl: string }[] = [];
 
     export let course: { 
       id: string; 
@@ -26,6 +29,34 @@
      };
 
     const dispatch = createEventDispatcher();
+
+    async function fetchSoftwareData(softwareIds: string[]) {
+      debugger;
+      const db = getFirestore();
+      const softwareCollection = collection(db, "software");
+      const softwareData = [];
+
+      try {
+        for (const softwareId of softwareIds) {
+          const softwareDocRef = doc(softwareCollection, softwareId);
+          const softwareDocSnapshot = await getDoc(softwareDocRef);
+
+          if (softwareDocSnapshot.exists()) {
+            const softwareDoc = softwareDocSnapshot.data();
+            softwareData.push({
+              name: softwareDoc.software_name,
+              imageUrl: softwareDoc.imageUrl,
+            });
+          } else {
+            console.log(`Software document with ID ${softwareId} does not exist.`);
+          }
+        }
+        return softwareData;
+      } catch (error) {
+        console.error("Error fetching software data:", error);
+        return [];
+      }
+    }
 
     function handleDelete() {
       const courseDocRef = doc(db, 'courses', course.id);
@@ -71,6 +102,10 @@
       isExpanded = !isExpanded;
     }
 
+    onMount(async () => {
+      softwareData = await fetchSoftwareData(course.software);
+    });
+
 </script>
 
   <Card.Root class="w-60 rounded-lg shadow-md overflow-hidden transition-transform duration-300 transform-gpu hover:scale-105 hover:shadow-2xl">
@@ -108,10 +143,12 @@
           {/if}
         </p>
         <div class="inline-flex flex-wrap space-x-reverse space-x-1">
+          {#each softwareData as software}
           <div class="flex items-center">
-            <img src="/images/son.png" alt="Instructor 1" class="w-6 h-6 rounded-full mr-2" />
+            <img src="{software.imageUrl}" alt="{software.name}" class="w-6 h-6 rounded-full mr-2" />
             <span class="text-xs font-semibold">{course.software}</span>
           </div>
+          {/each}
         </div>
       </Card.Content>
 
