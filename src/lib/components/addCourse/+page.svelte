@@ -22,8 +22,6 @@
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
-      curriculum: string;
-      course_fee: string;
     } | null = null;
 
     
@@ -37,8 +35,6 @@
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
-      curriculum: string;
-      course_fee: string;
       courseImageUrl?: string | null;
       lastUpdated: Timestamp | FieldValue;
     }
@@ -50,8 +46,6 @@
     let deliveryInput: string = editingCourse?.delivery_mode || '';
     let scheduleInput: string = editingCourse?.schedule || '';
     let prerequisitesInput: string = editingCourse?.prerequisites || '';
-    let curriculumInput: string = editingCourse?.curriculum || '';
-    let course_feeInput: string = editingCourse?.course_fee || '';
     let courseImageInput: File | null = null;
     let softwares: { id: string; name: string }[] = [];
     
@@ -82,8 +76,6 @@
         delivery_mode: deliveryInput,
         schedule: scheduleInput,
         prerequisites: prerequisitesInput,
-        curriculum: curriculumInput,
-        course_fee: course_feeInput,
         lastUpdated: serverTimestamp(),
       };
       
@@ -200,11 +192,11 @@
       <div class="grid grid-cols-4 gap-4 py-4 border border-gray-300 rounded-md p-4">
         <div class="grid gap-2 col-span-2">
           <Label for="moduleName">Module Name</Label>
-          <Input id="moduleName" class="w-full" placeholder="Enter Module" bind:value={curriculumInput} />
+          <Input id="moduleName" class="w-full" placeholder="Enter Module"/>
         </div>
         <div class="grid gap-2 col-span-2">
           <Label for="description">Description</Label>
-          <Textarea id="description" class="w-full" placeholder="Enter module description" bind:value={course_feeInput} />
+          <Textarea id="description" class="w-full" placeholder="Enter module description"/>
         </div>
       </div>
       <Dialog.Footer>
