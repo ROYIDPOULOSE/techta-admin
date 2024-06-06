@@ -187,22 +187,24 @@
           <Input id="prerequisites" class="w-64" placeholder="Enter prerequisites" bind:value={prerequisitesInput} />
         </div>
         <div class="grid gap-2">
-          <Label for="curriculum">Curriculum</Label>
-          <Input id="curriculum" class="w-64" placeholder="Enter curriculum" bind:value={curriculumInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="course_fee">Course Fee</Label>
-          <Input id="course_fee" class="w-64" placeholder="Enter course fee" bind:value={course_feeInput} />
-        </div>
-        <div class="grid gap-2">
           <Label for="course_image">Course Image</Label>
           <Input
-            id="course_image"
-            class="w-64"
-            type="file"
-            accept="image/*"
-            on:change={handleImageUpload}
+          id="course_image"
+          class="w-64"
+          type="file"
+          accept="image/*"
+          on:change={handleImageUpload}
           />
+        </div>
+      </div>
+      <div class="grid grid-cols-4 gap-4 py-4 border border-gray-300 rounded-md p-4">
+        <div class="grid gap-2 col-span-2">
+          <Label for="moduleName">Module Name</Label>
+          <Input id="moduleName" class="w-full" placeholder="Enter Module" bind:value={curriculumInput} />
+        </div>
+        <div class="grid gap-2 col-span-2">
+          <Label for="description">Description</Label>
+          <Textarea id="description" class="w-full" placeholder="Enter module description" bind:value={course_feeInput} />
         </div>
       </div>
       <Dialog.Footer>
