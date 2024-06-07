@@ -22,6 +22,7 @@
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
+      modules?: ModuleData[];
     } | null = null;
 
     
@@ -37,6 +38,7 @@
       prerequisites: string;
       courseImageUrl?: string | null;
       lastUpdated: Timestamp | FieldValue;
+      modules?: { [key: string]: ModuleData };
     }
 
     interface ModuleData {
@@ -54,7 +56,7 @@
     let courseImageInput: File | null = null;
     let softwares: { id: string; name: string }[] = [];
     let showAddModuleSection = false;
-    let modules: ModuleData[] = [];
+    let modules: ModuleData[] = editingCourse?.modules || [{ moduleName: '', description: '' }];
     
     const storage = getStorage();
 
@@ -86,6 +88,13 @@
         lastUpdated: serverTimestamp(),
       };
       
+      const moduleData: { [key: string]: ModuleData } = {};
+
+      modules.forEach((module, index) => {
+        const moduleKey = `module${index + 1}`;
+        moduleData[moduleKey] = module;
+      });
+
       try {
         let courseImageUrl: string | null = null;
 
@@ -93,24 +102,26 @@
           const storageRef = ref(storage, `course_images/${courseImageInput.name}`);
           const uploadTask = uploadBytesResumable(storageRef, courseImageInput);
 
-          courseImageUrl = await new Promise((resolve, reject) => {
-            uploadTask.on(
-              'state_changed',
-              (snapshot) => {
-                // Handle progress if needed
-              },
-              (error) => {
-                console.error('Error uploading image:', error);
-                reject(error);
-              },
-              async () => {
-                const url = await getDownloadURL(uploadTask.snapshot.ref);
-                resolve(url);
-              }
-            );
-          });
-          courseData.courseImageUrl = courseImageUrl;
-        }
+            courseImageUrl = await new Promise((resolve, reject) => {
+              uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                  // Handle progress if needed
+                },
+                (error) => {
+                  console.error('Error uploading image:', error);
+                  reject(error);
+                },
+                async () => {
+                  const url = await getDownloadURL(uploadTask.snapshot.ref);
+                  resolve(url);
+                }
+              );
+            });
+            courseData.courseImageUrl = courseImageUrl;
+          }
+
+        courseData.modules = moduleData;
 
         if (editingCourse) {
           const courseDocRef = doc(db, 'courses', editingCourse.id);
@@ -201,9 +212,11 @@
             on:change={handleImageUpload}
             />
           </div>
-          <div class="grid gap-2 pt-4">
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center">
             <Label>Add Modules</Label>
-            <input type="checkbox" bind:checked={showAddModuleSection} />
+            <input type="checkbox" bind:checked={showAddModuleSection} class="ml-2" />
           </div>
         </div>
         {#if showAddModuleSection}
