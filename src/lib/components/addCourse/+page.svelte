@@ -38,6 +38,11 @@
       courseImageUrl?: string | null;
       lastUpdated: Timestamp | FieldValue;
     }
+
+    interface ModuleData {
+      moduleName: string;
+      description: string;
+    }
     
     let courseInput: string = editingCourse?.course_name || '';
     let softwareInput: string[] = editingCourse?.software ?? [];
@@ -48,6 +53,8 @@
     let prerequisitesInput: string = editingCourse?.prerequisites || '';
     let courseImageInput: File | null = null;
     let softwares: { id: string; name: string }[] = [];
+    let showAddModuleSection = false;
+    let modules: ModuleData[] = [];
     
     const storage = getStorage();
 
@@ -131,6 +138,11 @@
       courseInput = '';
       softwareInput = [];
       durationInput = 0;
+      modules = [];
+    }
+
+    function addModule() {
+      modules = [...modules, { moduleName: '', description: '' }];
     }
   </script>
 
@@ -140,69 +152,80 @@
       <Dialog.Title>Course Details</Dialog.Title>
       <Dialog.Description> create a new course here. </Dialog.Description>
     </Dialog.Header>
-    <form on:submit|preventDefault={saveCourse}>
-      <div class="grid grid-cols-4 gap-4 py-4">
-        <div class="grid gap-2">
-          <Label for="course">Course</Label>
-          <Input id="course" class="w-64" placeholder="2D Drafting and Ploting" bind:value={courseInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="software">Software</Label>
-          <select
-            id="software"
+    <div class="max-h-[500px] overflow-y-auto">
+      <form on:submit|preventDefault={saveCourse}>
+        <div class="grid grid-cols-4 gap-4 py-4">
+          <div class="grid gap-2">
+            <Label for="course">Course</Label>
+            <Input id="course" class="w-64" placeholder="2D Drafting and Ploting" bind:value={courseInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="software">Software</Label>
+            <select
+              id="software"
+              class="w-64"
+              multiple
+              bind:value={softwareInput}>
+              {#each softwares as software}
+                <option value={software.id}>{software.name}</option>
+              {/each}
+            </select>
+          </div>
+          <div class="grid gap-2">
+            <Label for="duration">Duration</Label>
+            <Input id="duration" class="w-64" type="number" placeholder="60" bind:value={durationInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="course_description">Course Description</Label>
+            <Textarea  id="course_description" class="w-64" placeholder="Enter course description" bind:value={discriptionInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="delivery_mode">Delivery Mode</Label>
+            <Input id="delivery_mode" class="w-64" placeholder="Online/In-person" bind:value={deliveryInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="schedule">Schedule</Label>
+            <Input id="schedule" class="w-64" placeholder="Enter schedule" bind:value={scheduleInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="prerequisites">Prerequisites</Label>
+            <Input id="prerequisites" class="w-64" placeholder="Enter prerequisites" bind:value={prerequisitesInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="course_image">Course Image</Label>
+            <Input
+            id="course_image"
             class="w-64"
-            multiple
-            bind:value={softwareInput}>
-            {#each softwares as software}
-              <option value={software.id}>{software.name}</option>
+            type="file"
+            accept="image/*"
+            on:change={handleImageUpload}
+            />
+          </div>
+          <div class="grid gap-2 pt-4">
+            <Label>Add Modules</Label>
+            <input type="checkbox" bind:checked={showAddModuleSection} />
+          </div>
+        </div>
+        {#if showAddModuleSection}
+        <div class="grid grid-cols-4 gap-4 py-4 border border-gray-300 rounded-md p-4">
+          {#each modules as module, index}
+              <div class="grid gap-2 col-span-2">
+                <Label for={`moduleName-${index}`}>Module Name</Label>
+                <Input id={`moduleName-${index}`} class="w-full" placeholder="Enter Module" bind:value={module.moduleName} />
+              </div>
+              <div class="grid gap-2 col-span-2">
+                <Label for={`description-${index}`}>Description</Label>
+                <Textarea id={`description-${index}`} class="w-full" placeholder="Enter module description" bind:value={module.description} />
+              </div>
             {/each}
-          </select>
-        </div>
-        <div class="grid gap-2">
-          <Label for="duration">Duration</Label>
-          <Input id="duration" class="w-64" type="number" placeholder="60" bind:value={durationInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="course_description">Course Description</Label>
-          <Textarea  id="course_description" class="w-64" placeholder="Enter course description" bind:value={discriptionInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="delivery_mode">Delivery Mode</Label>
-          <Input id="delivery_mode" class="w-64" placeholder="Online/In-person" bind:value={deliveryInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="schedule">Schedule</Label>
-          <Input id="schedule" class="w-64" placeholder="Enter schedule" bind:value={scheduleInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="prerequisites">Prerequisites</Label>
-          <Input id="prerequisites" class="w-64" placeholder="Enter prerequisites" bind:value={prerequisitesInput} />
-        </div>
-        <div class="grid gap-2">
-          <Label for="course_image">Course Image</Label>
-          <Input
-          id="course_image"
-          class="w-64"
-          type="file"
-          accept="image/*"
-          on:change={handleImageUpload}
-          />
-        </div>
-      </div>
-      <div class="grid grid-cols-4 gap-4 py-4 border border-gray-300 rounded-md p-4">
-        <div class="grid gap-2 col-span-2">
-          <Label for="moduleName">Module Name</Label>
-          <Input id="moduleName" class="w-full" placeholder="Enter Module"/>
-        </div>
-        <div class="grid gap-2 col-span-2">
-          <Label for="description">Description</Label>
-          <Textarea id="description" class="w-full" placeholder="Enter module description"/>
-        </div>
-      </div>
-      <Dialog.Footer>
-        <Button variant="ghost" on:click={closeDialog}>Cancel</Button>
-        <Button type="submit">Save changes</Button>
-      </Dialog.Footer>
-    </form>
+          </div>
+          <Button on:click={addModule}>Add Module</Button>
+        {/if}
+        <Dialog.Footer>
+          <Button variant="ghost" on:click={closeDialog}>Cancel</Button>
+          <Button type="submit">Save changes</Button>
+        </Dialog.Footer>
+      </form>
+    </div>
   </Dialog.Content>
 </Dialog.Root>
