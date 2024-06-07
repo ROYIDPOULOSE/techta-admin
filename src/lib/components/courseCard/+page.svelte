@@ -31,7 +31,6 @@
     const dispatch = createEventDispatcher();
 
     async function fetchSoftwareData(softwareIds: string[]) {
-      debugger;
       const db = getFirestore();
       const softwareCollection = collection(db, "software");
       const softwareData = [];
