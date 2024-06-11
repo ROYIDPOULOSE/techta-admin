@@ -22,6 +22,7 @@
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
+      stream: string;
       modules?: ModuleData[];
     } | null = null;
 
@@ -36,6 +37,7 @@
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
+      stream: string;
       courseImageUrl?: string | null;
       lastUpdated: Timestamp | FieldValue;
       modules?: { [key: string]: ModuleData };
@@ -45,6 +47,13 @@
       moduleName: string;
       description: string;
     }
+
+    const streams = [
+      { value: "Civil", label: "Civil" },
+      { value: "IT", label: "IT" },
+      { value: "Mech", label: "Mech" },
+      { value: "Aero", label: "Aero" }
+    ];
     
     let courseInput: string = editingCourse?.course_name || '';
     let softwareInput: string[] = editingCourse?.software ?? [];
@@ -53,6 +62,7 @@
     let deliveryInput: string = editingCourse?.delivery_mode || '';
     let scheduleInput: string = editingCourse?.schedule || '';
     let prerequisitesInput: string = editingCourse?.prerequisites || '';
+    let streamInput: string = editingCourse?.stream || '';
     let courseImageInput: File | null = null;
     let softwares: { id: string; name: string }[] = [];
     let showAddModuleSection = false;
@@ -85,6 +95,7 @@
         delivery_mode: deliveryInput,
         schedule: scheduleInput,
         prerequisites: prerequisitesInput,
+        stream: streamInput,
         lastUpdated: serverTimestamp(),
       };
       
@@ -165,7 +176,7 @@
     </Dialog.Header>
     <div class="max-h-[500px] overflow-y-auto">
       <form on:submit|preventDefault={saveCourse}>
-        <div class="grid grid-cols-4 gap-4 py-4">
+        <div class="grid grid-cols-4 gap-4 pl-2 py-4">
           <div class="grid gap-2">
             <Label for="course">Course</Label>
             <Input id="course" class="w-64" placeholder="2D Drafting and Ploting" bind:value={courseInput} />
@@ -185,6 +196,15 @@
           <div class="grid gap-2">
             <Label for="duration">Duration</Label>
             <Input id="duration" class="w-64" type="number" placeholder="60" bind:value={durationInput} />
+          </div>
+          <div class="grid gap-2">
+            <Label for="stream">Stream</Label>
+            <select id="stream" class="w-64" bind:value={streamInput}>
+              <option value="" disabled selected>Select a stream</option>
+              {#each streams as stream}
+                <option value={stream.value}>{stream.label}</option>
+              {/each}
+            </select>
           </div>
           <div class="grid gap-2">
             <Label for="course_description">Course Description</Label>
