@@ -4,20 +4,7 @@
     import CourseCard from '$lib/components/courseCard/+page.svelte'
     import { onSnapshot, collection, Timestamp, FieldValue } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
-    interface CourseData {
-        id: string;
-        course_name: string;
-        software: string[];
-        duration: number;
-        course_discription: string;
-        delivery_mode: string;
-        schedule: string;
-        prerequisites: string;
-        curriculum: string;
-        course_fee: string;
-        courseImageUrl: string;
-        lastUpdated: Timestamp | FieldValue;
-    }
+    import type { ModuleData, CourseData } from './types';
 
     let showDialog: boolean = false;
     let courses: CourseData[] = [];

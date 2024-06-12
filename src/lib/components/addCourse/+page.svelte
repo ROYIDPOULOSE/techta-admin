@@ -24,6 +24,7 @@
       prerequisites: string;
       stream: string;
       modules?: ModuleData[];
+      courseType: string;
     } | null = null;
 
     
@@ -41,6 +42,8 @@
       courseImageUrl?: string | null;
       lastUpdated: Timestamp | FieldValue;
       modules?: { [key: string]: ModuleData };
+      courseType: string;
+      ourbest: boolean;
     }
 
     interface ModuleData {
@@ -67,6 +70,8 @@
     let softwares: { id: string; name: string }[] = [];
     let showAddModuleSection = false;
     let modules: ModuleData[] = editingCourse?.modules || [{ moduleName: '', description: '' }];
+    let courseTypeInput: string = '';
+    let isOurBest: boolean = false;
     
     const storage = getStorage();
 
@@ -97,6 +102,8 @@
         prerequisites: prerequisitesInput,
         stream: streamInput,
         lastUpdated: serverTimestamp(),
+        courseType: courseTypeInput,
+        ourbest: isOurBest,
       };
       
       const moduleData: { [key: string]: ModuleData } = {};
@@ -171,8 +178,26 @@
 <Dialog.Root open={open} onOpenChange={closeDialog}>
   <Dialog.Content class="sm:max-w-[1200px] p-8">
     <Dialog.Header>
-      <Dialog.Title>Course Details</Dialog.Title>
-      <Dialog.Description> create a new course here. </Dialog.Description>
+      <div class="flex justify-between">
+        <div>
+          <Dialog.Title>Course Details</Dialog.Title>
+          <Dialog.Description> create a new course here. </Dialog.Description>
+        </div>
+        <div class="flex justify-end gap-8">
+          <div class="grid gap-2">
+            <Label for="course_type">Course Type</Label>
+            <select id="course_type" class="w-64" bind:value={courseTypeInput}>
+              <option value="" disabled selected>Select Course Type</option>
+              <option value="professional">Professional</option>
+              <option value="interim">Interim</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <Label for="ourbest">Our Best</Label>
+            <input id="ourbest" type="checkbox" bind:checked={isOurBest}/>
+          </div>
+        </div>
+      </div>
     </Dialog.Header>
     <div class="max-h-[500px] overflow-y-auto">
       <form on:submit|preventDefault={saveCourse}>
