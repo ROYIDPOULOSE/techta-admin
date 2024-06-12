@@ -42,7 +42,7 @@
         if (updatedCourse.id) {
             const updatedCourses = courses.map((course): CourseData => {
             if (course.id === updatedCourse.id) {
-                return updatedCourse as CourseData; // Type assertion for updatedCourse
+                return updatedCourse as CourseData;
             }
             return course;
             });
@@ -121,7 +121,7 @@
             editingCourse={editingCourse}
             on:update={(event) => {
                 handleUpdateCourse(event);
-                sortCourses(); // Sort the courses after updating
+                sortCourses();
             }}
             />
     {/if}
