@@ -13,7 +13,7 @@
     const dispatch = createEventDispatcher();
 
     function handleDelete(software: SoftwareData) {
-        const courseDocRef = doc(db, 'softwares', software.id);
+        const courseDocRef = doc(db, 'software', software.id);
         deleteDoc(courseDocRef)
         .then(() => {
             console.log('Course deleted successfully');
