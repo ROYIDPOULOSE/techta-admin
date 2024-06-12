@@ -30,7 +30,7 @@
 
     
     interface CourseData {
-      [key: string]: any; // Index signature to allow dynamic property access
+      [key: string]: any; 
       id?: string;
       course_name: string;
       software: string[];

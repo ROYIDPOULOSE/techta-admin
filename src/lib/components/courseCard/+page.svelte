@@ -6,7 +6,7 @@
   import { db } from '$lib/services/firebase';
   import { createEventDispatcher } from 'svelte';
   import { getStorage, ref, deleteObject } from 'firebase/storage';
-  import { getFirestore, collection, getDocs } from "firebase/firestore";
+  import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
   import { onMount } from 'svelte';
   import { Ellipsis } from 'lucide-svelte';
 
@@ -51,6 +51,30 @@
         return softwareData;
       } catch (error) {
         console.error("Error fetching software data:", error);
+        return [];
+      }
+    }
+
+    async function fetchSoftwareIds(softwareNames: string[]): Promise<string[]> {
+      const db = getFirestore();
+      const softwareCollection = collection(db, "software");
+      const softwareIds = [];
+
+      try {
+        for (const softwareName of softwareNames) {
+          const softwareQuery = query(softwareCollection, where("software_name", "==", softwareName));
+          const softwareSnapshot = await getDocs(softwareQuery);
+
+          if (!softwareSnapshot.empty) {
+            const softwareDoc = softwareSnapshot.docs[0];
+            softwareIds.push(softwareDoc.id);
+          } else {
+            console.log(`Software with name ${softwareName} does not exist.`);
+          }
+        }
+        return softwareIds;
+      } catch (error) {
+        console.error("Error fetching software IDs:", error);
         return [];
       }
     }
@@ -143,7 +167,7 @@
           {#each softwareData as software}
           <div class="flex items-center">
             <img src="{software.imageUrl}" alt="{software.name}" class="w-6 h-6 rounded-full mr-2" />
-            <span class="text-xs font-semibold">{course.software}</span>
+            <span class="text-xs font-semibold">{software.name}</span>
           </div>
           {/each}
         </div>
