@@ -23,8 +23,6 @@
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
-      curriculum: string;
-      course_fee: string;
       courseImageUrl: string;
      };
 
