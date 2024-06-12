@@ -70,7 +70,7 @@
     let courseImageInput: File | null = null;
     let softwares: { id: string; name: string }[] = [];
     let showAddModuleSection = false;
-    let modules: ModuleData[] = editingCourse?.modules || [{ moduleName: '', description: '' }];
+    let modules: ModuleData[] = editingCourse ? (editingCourse.modules || []) : [];
     let courseTypeInput: string = editingCourse?.courseType || '';
     let isOurBest: boolean = editingCourse?.ourbest || false;
     
@@ -109,10 +109,14 @@
       
       const moduleData: { [key: string]: ModuleData } = {};
 
-      modules.forEach((module, index) => {
-        const moduleKey = `module${index + 1}`;
-        moduleData[moduleKey] = module;
-      });
+      if (Array.isArray(modules)) {
+        modules.forEach((module, index) => {
+          const moduleKey = `module${index + 1}`;
+          moduleData[moduleKey] = module;
+        });
+      } else {
+        console.error("modules is not an array");
+      }
 
       try {
         let courseImageUrl: string | null = null;
