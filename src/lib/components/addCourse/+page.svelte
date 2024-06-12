@@ -25,6 +25,7 @@
       stream: string;
       modules?: ModuleData[];
       courseType: string;
+      ourbest: boolean;
     } | null = null;
 
     
@@ -70,8 +71,8 @@
     let softwares: { id: string; name: string }[] = [];
     let showAddModuleSection = false;
     let modules: ModuleData[] = editingCourse?.modules || [{ moduleName: '', description: '' }];
-    let courseTypeInput: string = '';
-    let isOurBest: boolean = false;
+    let courseTypeInput: string = editingCourse?.courseType || '';
+    let isOurBest: boolean = editingCourse?.ourbest || false;
     
     const storage = getStorage();
 
