@@ -23,12 +23,13 @@
                 <Card.Content class="mt-5">
                   <div class="grid gap-6">
                     <div class="grid gap-3">
-                      <Label for="name">Post Title</Label>
+                      <Label for="name">Title</Label>
                       <Input
                         id="name"
                         type="text"
                         class="w-full"
-                        value="Gamer Gear Pro Controller"
+                        placeholder=""
+                        value="add title"
                       />
                     </div>
                     <div class="grid gap-3">
@@ -37,13 +38,15 @@
                         id="name"
                         type="text"
                         class="w-full"
-                        value="Gamer Gear Pro Controller"
+                        placeholder="Permalink"
+                        value="Permalink"
                       />
                     </div>
                     <div class="grid gap-3">
                       <Label for="description">Description</Label>
                       <Textarea
                         id="description"
+                        placeholder="description"
                         value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec ultricies nunc nisl nec nunc."
                         class="min-h-32"
                       />
@@ -53,27 +56,46 @@
               </Card.Root>
         </div>
     </div>
-    <div>
-        <Card.Root class="mr-10">
-          <Card.Content class="mt-5">
-            <div class="grid gap-6">
-              <Button>
-                Publish
-              </Button>
-              <div class="grid gap-3">
-                <Label for="status">Status</Label>
-                <select>
-
-                </select>
-              </div>
-              <div class="grid gap-3">
-                <Label for="status">Priority</Label>
-                <select>
-
-                </select>
-              </div>
-            </div>
-          </Card.Content>
-        </Card.Root>
+    <div class="mr-10">
+        <div>
+            <Card.Root>
+                <Card.Content class="mt-5">
+                  <div class="grid gap-6">
+                    <Button>
+                      Create Blog
+                    </Button>
+                    <div class="grid gap-3">
+                      <Label for="status">Status</Label>
+                      <select>
+      
+                      </select>
+                    </div>
+                    <div class="grid gap-3">
+                      <Label for="status">Priority</Label>
+                      <select>
+      
+                      </select>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card.Root>
+        </div>
+        <div>
+            <Card.Root class="mt-5">
+                <Card.Content class="mt-5">
+                  <div class="grid gap-6">
+                      <div class="grid gap-3">
+                        <img 
+                            src="/favicon.png"
+                            alt="favicon"
+                        />
+                      </div>
+                    <Button>
+                      Add Image
+                    </Button>
+                  </div>
+                </Card.Content>
+              </Card.Root>
+        </div>
     </div>
 </div>
