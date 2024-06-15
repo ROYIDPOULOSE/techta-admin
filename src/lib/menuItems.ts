@@ -36,6 +36,15 @@ export const menuItems: MenuItem[] = [
       ]
     },
     {
+      name: "Blog",
+      icon: "fa-user",
+      items: [
+        { name: "Posts", page: "admin/blog/posts" },
+        { name: "Add New Post", page: "admin/blog/addNewPost" },
+        { name: "View Post", page: "admin/blog/viewPost" },
+      ]
+    },
+    {
       name: "Enquires",
       icon:"fa-user",
       items: [
