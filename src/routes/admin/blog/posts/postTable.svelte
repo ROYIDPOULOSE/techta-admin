@@ -8,6 +8,7 @@
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
     import { onSnapshot, collection, Timestamp } from 'firebase/firestore';
     import { db } from '$lib/services/firebase';
+    import { goto } from '$app/navigation';
    
     let blogs: BlogData[] = [];
 
@@ -39,7 +40,7 @@
     }
 
     function handleEditClick(blog: BlogData) {
-        dispatch('edit', blog);
+        goto(`/admin/blog/addNewPost?id=${blog.id}`);
     }
   </script>
    
@@ -50,6 +51,7 @@
         <Table.Head class="w-[100px]">ID</Table.Head>
         <Table.Head>Title</Table.Head>
         <Table.Head>Auther</Table.Head>
+        <Table.Head>Date</Table.Head>
         <Table.Head>Status</Table.Head>
         <Table.Head>Priority</Table.Head>
         <Table.Head class="text-right">Actions</Table.Head>
@@ -76,10 +78,10 @@
                       <span>View</span>
                       </DropdownMenu.Item>
                   <DropdownMenu.Item on:click={() => handleEditClick(blog)}>
-                    <span>Edit</span>
+                        <span>Edit</span>
                   </DropdownMenu.Item>
                   <DropdownMenu.Item on:click={() => handleDelete(blog)}>
-                    <span>Delete</span>
+                        <span>Delete</span>
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
