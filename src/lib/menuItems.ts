@@ -23,8 +23,8 @@ export const menuItems: MenuItem[] = [
       icon: "fa-tag",
       items: [
         { name: "Softwares", page: "admin/course/softwares" },
-        { name: "Individual Software", page: "admin/course/individualCourse" },
-        { name: "Package", page: "admin/course/package" }
+        { name: "Professional Course", page: "admin/course/professionalCourse" },
+        { name: "Interim", page: "admin/course/interim" }
       ]
     },
     {
