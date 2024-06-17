@@ -11,9 +11,11 @@
     import { page } from '$app/stores';
     import { onMount, onDestroy } from 'svelte';
     import { browser } from '$app/environment';
-
+    
+    $: hasUnsavedChanges = browser && (title !== "" || permalink !== "" || description !== "" || 
+    selectedStatus !== "" || selectedPriority !== "" || selectedImageUrl !== "/favicon.png");
+    
     let imageUpload: HTMLInputElement;
-    $: hasUnsavedChanges = browser && (title !== "" || permalink !== "" || description !== "" || selectedStatus !== "" || selectedPriority !== "" || selectedImageUrl !== "/favicon.png");
     let selectedImageUrl = "/favicon.png";
     let title = "";
     let permalink = "";
@@ -22,6 +24,9 @@
     let selectedPriority = "";
     let blogId: string | null = null;
     let isEditing = false;
+    let authorImageUpload: HTMLInputElement;
+    let selectedAuthorImageUrl = "/favicon.png";
+    let authorName = "";
 
     const status = [
       { value: "Public", label: "public" },
@@ -33,6 +38,18 @@
       { value: "Medium", label: "medium" },
       { value: "Low", label: "low" },
     ];
+
+    function pickAuthorAvatar() {
+        authorImageUpload.click();
+    }
+
+    function handleAuthorImageUpload(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
+        if (file) {
+            selectedAuthorImageUrl = URL.createObjectURL(file);
+        }
+    }
 
     function pickAvatar() {
         imageUpload.click();
@@ -51,6 +68,7 @@
 
     async function createOrUpdateBlog() {
         let imageUrl = selectedImageUrl;
+        let authorImageUrl = selectedAuthorImageUrl;
 
         if (browser && imageUpload && imageUpload.files && imageUpload.files.length > 0) {
             const file = imageUpload.files[0];
@@ -69,6 +87,20 @@
             alert("Please select an image");
             return;
         }
+
+        if (browser && authorImageUpload && authorImageUpload.files && authorImageUpload.files.length > 0) {
+            const file = authorImageUpload.files[0];
+            const storageRef = ref(storage, 'author_images/' + file.name);
+            
+            try {
+                await uploadBytes(storageRef, file);
+                authorImageUrl = await getDownloadURL(storageRef);
+            } catch (error) {
+                console.error("Error uploading author image: ", error);
+                alert("An error occurred while uploading the author image.");
+                return;
+            }
+        }
         
         try {
             const blogData = {
@@ -78,6 +110,8 @@
                 status: selectedStatus,
                 priority: selectedPriority,
                 imageUrl,
+                authorName,
+                authorImageUrl,
                 lastUpdated: new Date()
             };
 
@@ -110,6 +144,8 @@
         selectedStatus = "";
         selectedPriority = "";
         selectedImageUrl = "/favicon.png";
+        authorName = "";
+        selectedAuthorImageUrl = "/favicon.png";
         if (browser && imageUpload) {
             imageUpload.value = "";
         }
@@ -142,6 +178,8 @@
                             selectedStatus = blogData.status;
                             selectedPriority = blogData.priority;
                             selectedImageUrl = blogData.imageUrl;
+                            authorName = blogData.authorName || "";
+                            selectedAuthorImageUrl = blogData.authorImageUrl || "/favicon.png";
                         } else {
                             console.error('No such document!');
                         }
@@ -177,6 +215,41 @@
     <div class="col-span-2">
         <div class="pl-10">
             <Card.Root>
+                <Card.Content class="mt-5">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <img
+                                src={selectedAuthorImageUrl}
+                                width={36}
+                                height={36}
+                                alt="Author Avatar"
+                                class="overflow-hidden rounded-full cursor-pointer"
+                                on:click={pickAuthorAvatar}
+                            />
+                            <input
+                                type="file"
+                                bind:this={authorImageUpload}
+                                on:change={handleAuthorImageUpload}
+                                hidden
+                                accept="image/png, image/jpeg"
+                            />
+                        </div>
+                        <div class="flex-grow">
+                            <Label for="author">Author</Label>
+                            <Input
+                                id="author"
+                                type="text"
+                                class="w-full"
+                                placeholder="Author"
+                                bind:value={authorName}
+                            />
+                        </div>
+                    </div>
+                </Card.Content>
+            </Card.Root>
+        </div>
+        <div class="pl-10">
+            <Card.Root class="mt-5">
                 <Card.Content class="mt-5">
                   <div class="grid gap-6">
                     <div class="grid gap-3">
