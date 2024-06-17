@@ -7,8 +7,11 @@
     import { Ellipsis } from 'lucide-svelte';
     import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
     import { onSnapshot, collection, Timestamp } from 'firebase/firestore';
+    import { deleteObject, ref as storageRef } from 'firebase/storage';
+    import { storage } from '$lib/services/firebase';
     import { db } from '$lib/services/firebase';
     import { goto } from '$app/navigation';
+    import { onDestroy } from 'svelte';
    
     let blogs: BlogData[] = [];
 
@@ -21,6 +24,8 @@
             return {
                 id: doc.id,
                 ...data,
+                imageUrl: data.imageUrl || '',
+                authorImageUrl: data.authorImageUrl || '',
                 lastUpdated,
             } as BlogData;
         });
@@ -28,20 +33,35 @@
 
     const dispatch = createEventDispatcher();
 
-    function handleDelete(blog: BlogData) {
-        const courseDocRef = doc(db, 'blogs', blog.id);
-        deleteDoc(courseDocRef)
-        .then(() => {
-            console.log('Course deleted successfully');
-        })
-        .catch((error) => {
-            console.error('Error deleting course: ', error);
-        });
+    async function handleDelete(blog: BlogData) {
+        if (confirm(`Are you sure you want to delete the blog "${blog.title}"?`)) {
+            try {
+                await deleteDoc(doc(db, 'blogs', blog.id));
+
+                if (blog.imageUrl) {
+                    const imageRef = storageRef(storage, blog.imageUrl);
+                    await deleteObject(imageRef);
+                }
+
+                if (blog.authorImageUrl) {
+                    const authorImageRef = storageRef(storage, blog.authorImageUrl);
+                    await deleteObject(authorImageRef);
+                }
+
+                console.log('Blog and associated images deleted successfully');
+            } catch (error) {
+                console.error('Error deleting blog and images: ', error);
+            }
+        }
     }
 
     function handleEditClick(blog: BlogData) {
         goto(`/admin/blog/addNewPost?id=${blog.id}`);
     }
+
+    onDestroy(() => {
+        unsubscribe();
+    });
   </script>
    
   <Table.Root>

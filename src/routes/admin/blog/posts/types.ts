@@ -7,5 +7,7 @@ export interface BlogData {
     date: string;
     status: string;
     priority: string;
+    imageUrl?: string;
+    authorImageUrl?: string;
     lastUpdated: Timestamp;
   }
