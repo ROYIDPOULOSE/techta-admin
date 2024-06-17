@@ -27,6 +27,7 @@
     let authorImageUpload: HTMLInputElement;
     let selectedAuthorImageUrl = "/favicon.png";
     let authorName = "";
+    let autherDesignation = "";
 
     const status = [
       { value: "Public", label: "public" },
@@ -111,6 +112,7 @@
                 priority: selectedPriority,
                 imageUrl,
                 authorName,
+                autherDesignation,
                 authorImageUrl,
                 lastUpdated: new Date()
             };
@@ -145,6 +147,7 @@
         selectedPriority = "";
         selectedImageUrl = "/favicon.png";
         authorName = "";
+        autherDesignation = "";
         selectedAuthorImageUrl = "/favicon.png";
         if (browser && imageUpload) {
             imageUpload.value = "";
@@ -179,6 +182,7 @@
                             selectedPriority = blogData.priority;
                             selectedImageUrl = blogData.imageUrl;
                             authorName = blogData.authorName || "";
+                            autherDesignation = blogData.autherDesignation || "";
                             selectedAuthorImageUrl = blogData.authorImageUrl || "/favicon.png";
                         } else {
                             console.error('No such document!');
@@ -242,6 +246,16 @@
                                 class="w-full"
                                 placeholder="Author"
                                 bind:value={authorName}
+                            />
+                        </div>
+                        <div class="flex-grow">
+                            <Label for="dsignation">Designation</Label>
+                            <Input
+                                id="dsignation"
+                                type="text"
+                                class="w-full"
+                                placeholder="Author"
+                                bind:value={autherDesignation}
                             />
                         </div>
                     </div>

@@ -82,8 +82,8 @@
         <Table.Row>
           <Table.Cell class="font-medium">{blog.id}</Table.Cell>
           <Table.Cell>{blog.title}</Table.Cell>
-          <Table.Cell>{blog.auther}</Table.Cell>
-          <Table.Cell>{blog.date}</Table.Cell>
+          <Table.Cell>{blog.authorName}</Table.Cell>
+          <Table.Cell>{blog.createdAt}</Table.Cell>
           <Table.Cell>{blog.status}</Table.Cell>
           <Table.Cell>{blog.priority}</Table.Cell>
           <Table.Cell class="text-right">
