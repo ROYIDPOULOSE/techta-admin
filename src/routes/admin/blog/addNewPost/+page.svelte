@@ -9,9 +9,11 @@
     import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
     import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
     import { page } from '$app/stores';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
+    import { browser } from '$app/environment';
 
     let imageUpload: HTMLInputElement;
+    $: hasUnsavedChanges = browser && (title !== "" || permalink !== "" || description !== "" || selectedStatus !== "" || selectedPriority !== "" || selectedImageUrl !== "/favicon.png");
     let selectedImageUrl = "/favicon.png";
     let title = "";
     let permalink = "";
@@ -50,15 +52,13 @@
     async function createOrUpdateBlog() {
         let imageUrl = selectedImageUrl;
 
-        if (imageUpload.files && imageUpload.files.length > 0) {
+        if (browser && imageUpload && imageUpload.files && imageUpload.files.length > 0) {
             const file = imageUpload.files[0];
             const storageRef = ref(storage, 'blog_images/' + file.name);
             
             try {
-                // Upload new image to Firebase Storage
                 await uploadBytes(storageRef, file);
                 
-                // Get the new download URL
                 imageUrl = await getDownloadURL(storageRef);
             } catch (error) {
                 console.error("Error uploading image: ", error);
@@ -82,11 +82,9 @@
             };
 
             if (isEditing && blogId) {
-                // Update existing document
                 await updateDoc(doc(db, "blogs", blogId), blogData);
                 console.log("Blog updated successfully");
             } else {
-                // Create a new document
                 const docRef = await addDoc(collection(db, "blogs"), {
                     ...blogData,
                     createdAt: new Date()
@@ -95,29 +93,74 @@
             }
             
             alert(isEditing ? "Blog updated successfully!" : "Blog created successfully!");
+
+            resetForm();
             
-            // Navigate back to the blogs list
-            // goto('/blogs');
+            goto('/admin/blog/posts');
         } catch (error) {
             console.error("Error creating/updating blog: ", error);
             alert("An error occurred while creating/updating the blog.");
         }
     }
 
+    function resetForm() {
+        title = "";
+        permalink = "";
+        description = "";
+        selectedStatus = "";
+        selectedPriority = "";
+        selectedImageUrl = "/favicon.png";
+        if (browser && imageUpload) {
+            imageUpload.value = "";
+        }
+        blogId = null;
+        isEditing = false;
+    }
+
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+        if (hasUnsavedChanges) {
+            event.preventDefault();
+            event.returnValue = "";
+        }
+    }
+
     onMount(async () => {
-        blogId = $page.url.searchParams.get('id');
-        if (blogId) {
-            isEditing = true;
-            const blogDoc = await getDoc(doc(db, 'blogs', blogId));
-            if (blogDoc.exists()) {
-                const blogData = blogDoc.data();
-                title = blogData.title;
-                permalink = blogData.permalink;
-                description = blogData.description;
-                selectedStatus = blogData.status;
-                selectedPriority = blogData.priority;
-                selectedImageUrl = blogData.imageUrl;
+        if (browser) {
+            try {
+                resetForm();
+                
+                blogId = $page.url.searchParams.get('id');
+                if (blogId) {
+                    isEditing = true;
+                    try{
+                        const blogDoc = await getDoc(doc(db, 'blogs', blogId));
+                        if (blogDoc.exists()) {
+                            const blogData = blogDoc.data();
+                            title = blogData.title;
+                            permalink = blogData.permalink;
+                            description = blogData.description;
+                            selectedStatus = blogData.status;
+                            selectedPriority = blogData.priority;
+                            selectedImageUrl = blogData.imageUrl;
+                        } else {
+                            console.error('No such document!');
+                        }
+                    }catch (error) {
+                        console.error('Error fetching document:', error);
+                    }
+                }
+
+                window.addEventListener('beforeunload', handleBeforeUnload);
+            } catch (error) {
+                console.error('Error in onMount:', error);
             }
+        }
+    });
+
+    onDestroy(() => {
+        resetForm();
+        if (browser) {
+            window.addEventListener('beforeunload', handleBeforeUnload);
         }
     });
 </script>
