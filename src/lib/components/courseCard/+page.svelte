@@ -19,7 +19,7 @@
       course_name: string; 
       software: string[]; 
       duration: number;
-      course_discription: string;
+      course_description: string;
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
