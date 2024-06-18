@@ -18,7 +18,7 @@
       course_name: string; 
       software: string[]; 
       duration: number;
-      course_discription: string;
+      course_description: string;
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
@@ -35,7 +35,7 @@
       course_name: string;
       software: string[];
       duration: number;
-      course_discription: string;
+      course_description: string;
       delivery_mode: string;
       schedule: string;
       prerequisites: string;
@@ -62,7 +62,7 @@
     let courseInput: string = editingCourse?.course_name || '';
     let softwareInput: string[] = editingCourse?.software ?? [];
     let durationInput: number = editingCourse?.duration || 0;
-    let discriptionInput: string = editingCourse?.course_discription || '';
+    let descriptionInput: string = editingCourse?.course_description || '';
     let deliveryInput: string = editingCourse?.delivery_mode || '';
     let scheduleInput: string = editingCourse?.schedule || '';
     let prerequisitesInput: string = editingCourse?.prerequisites || '';
@@ -97,7 +97,7 @@
         course_name: courseInput,
         software: softwareInput,
         duration: durationInput,
-        course_discription: discriptionInput,
+        course_description: descriptionInput,
         delivery_mode: deliveryInput,
         schedule: scheduleInput,
         prerequisites: prerequisitesInput,
@@ -238,7 +238,7 @@
           </div>
           <div class="grid gap-2">
             <Label for="course_description">Course Description</Label>
-            <Textarea  id="course_description" class="w-64" placeholder="Enter course description" bind:value={discriptionInput} />
+            <Textarea  id="course_description" class="w-64" placeholder="Enter course description" bind:value={descriptionInput} />
           </div>
           <div class="grid gap-2">
             <Label for="delivery_mode">Delivery Mode</Label>
