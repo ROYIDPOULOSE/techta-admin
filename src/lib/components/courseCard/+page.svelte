@@ -155,7 +155,7 @@
         <h2 class="text-base font-bold mb-1 leading-tight">{course.course_name}</h2>
         <p class="text-gray-600 mb-3 text-xs leading-tight overflow-hidden {isExpanded ? 'line-clamp-none' : 'line-clamp-2'}"
         on:click={toggleExpand}>
-          {course.course_discription}
+          {course.course_description}
           {#if !isExpanded}
             <span>
               ...
