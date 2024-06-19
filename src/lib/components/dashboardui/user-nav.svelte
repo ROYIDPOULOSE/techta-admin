@@ -3,6 +3,7 @@
 	import * as Avatar from '../ui/avatar';
 	import { Button } from '../ui/button';
 	import { goto } from '$app/navigation';
+	import { authHandlers } from '../../store/store'
 
 </script>
 
@@ -25,6 +26,6 @@
 			<DropdownMenu.Item on:click={() => goto('/settings-general')}>Profile</DropdownMenu.Item>
 		</DropdownMenu.Group>
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item on:click={() => goto('/login')}>Log out</DropdownMenu.Item>
+		<DropdownMenu.Item on:click={authHandlers.logout}>Log out</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
