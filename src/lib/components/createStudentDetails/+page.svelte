@@ -14,7 +14,7 @@
       serverTimestamp,
       getDocs,
     } from "firebase/firestore";
-    import { app, db } from "$lib/services/firebase";
+    import { db } from "$lib/services/firebase";
   
     const dispatch = createEventDispatcher();
     export let open: boolean = false;
