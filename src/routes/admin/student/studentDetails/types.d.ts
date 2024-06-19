@@ -2,10 +2,13 @@ import { Timestamp } from 'firebase/firestore';
 
 export interface StudentData {
     id: string;
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     status: string;
-    course: string;
+    courseStatus: string;
+    courses: string[];
+    studentImageUrl: string;
     lastUpdated: Timestamp;
   }

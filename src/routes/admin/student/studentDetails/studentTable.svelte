@@ -36,8 +36,8 @@
         <Table.Head>Name</Table.Head>
         <Table.Head>Email</Table.Head>
         <Table.Head>Phone</Table.Head>
+        <Table.Head>Course Name</Table.Head>
         <Table.Head>Status</Table.Head>
-        <Table.Head>Course</Table.Head>
         <Table.Head class="text-right">Actions</Table.Head>
       </Table.Row>
     </Table.Header>
@@ -45,11 +45,12 @@
       {#each students as student, i (student.id)}
         <Table.Row>
           <Table.Cell class="font-medium">{student.id}</Table.Cell>
-          <Table.Cell>{student.name}</Table.Cell>
+          <Table.Cell>{student.firstName}{student.lastName}</Table.Cell>
           <Table.Cell>{student.email}</Table.Cell>
           <Table.Cell>{student.phone}</Table.Cell>
+          <Table.Cell>{student.courses}</Table.Cell>
+          <Table.Cell>{student.courseStatus}</Table.Cell>
           <Table.Cell>{student.status}</Table.Cell>
-          <Table.Cell>{student.course}</Table.Cell>
           <Table.Cell class="text-right">
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
