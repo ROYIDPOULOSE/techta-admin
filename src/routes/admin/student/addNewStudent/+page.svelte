@@ -21,12 +21,18 @@
     let email = "";
     let phone = "";
     let selectedStatus = "";
+    let selectedCourseStatus = "";
     let studentId: string | null = null;
     let isEditing = false;
 
     const statusOptions = [
         { value: "Active", label: "Active" },
         { value: "Graduate", label: "Graduate" },
+    ];
+
+    const courseStatusOptions = [
+      { value: "Ongoing", label: "Ongoing" },
+      { value: "Completed", label: "Completed" },
     ];
 
     let courses: { id: string; course: string }[] = [];
@@ -86,6 +92,7 @@
                 phone,
                 status: selectedStatus,
                 courses: selectedCourses,
+                courseStatus: selectedCourseStatus,
                 imageUrl,
                 lastUpdated: new Date()
             };
@@ -105,7 +112,7 @@
 
             resetForm();
             
-            goto('/admin/dashboard/students');
+            goto('/admin/student/studentDetails');
         } catch (error) {
             console.error("Error creating/updating student: ", error);
             alert("An error occurred while creating/updating the student.");
@@ -261,20 +268,19 @@
                       <Label for="courses">Select course</Label>
                       <select
                         id="courses"
-                        class="text-wrap"
-                        multiple
                         bind:value={selectedCourses}
                         required>
+                        <option value="">Select a course</option>
                         {#each courses as course}
                           <option value={course.id}>{course.course}</option>
                         {/each}
                       </select>
                     </div>
                     <div class="grid gap-3">
-                      <Label for="status">Status</Label>
-                      <select id="status" bind:value={selectedStatus} required>
-                        <option value="">Select a status</option>
-                        {#each statusOptions as option}
+                      <Label for="status">Course Status</Label>
+                      <select id="status" bind:value={selectedCourseStatus} required>
+                        <option value="">Select a course status</option>
+                        {#each courseStatusOptions as option}
                           <option value={option.value}>{option.label}</option>
                         {/each}
                       </select>
