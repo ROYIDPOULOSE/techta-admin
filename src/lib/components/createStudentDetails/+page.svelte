@@ -5,7 +5,6 @@
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { createEventDispatcher } from "svelte";
     import {
-      getFirestore,
       collection,
       addDoc,
       doc,
@@ -14,26 +13,42 @@
       serverTimestamp,
       getDocs,
     } from "firebase/firestore";
-    import { db } from "$lib/services/firebase";
+    import { db, storage } from "$lib/services/firebase";
+    import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
   
     const dispatch = createEventDispatcher();
     export let open: boolean = false;
     export let editingStudent: {
       id: string;
-      name: string;
+      firstName: string;
+      lastName: string;
       email: string;
       phone: string;
       status: string;
-      course: string;
+      courseStatus: string;
+      courses: string[];
     } | null = null;
   
-    let name: string = editingStudent?.name || "";
+    let firstName: string = editingStudent?.firstName || "";
+    let lastName: string = editingStudent?.lastName || "";
     let email: string = editingStudent?.email || "";
     let phone: string = editingStudent?.phone || "";
     let status: string = editingStudent?.status || "";
-    let course: string = editingStudent?.course || "";
-  
+    let courseStatus: string = editingStudent?.courseStatus || "";
     let courses: { id: string; course: string }[] = [];
+    let selectedCourses: string[] = editingStudent?.courses || [];
+    let studentImageUpload: HTMLInputElement;
+    let selectedStudentImageUrl = "/favicon.png";
+
+    const statusOptions = [
+      { value: "Active", label: "Active" },
+      { value: "Graduate", label: "Graduate" },
+    ];
+
+    const courseStatusOptions = [
+      { value: "Ongoing", label: "Ongoing" },
+      { value: "Completed", label: "Completed" },
+    ];
   
     async function loadCourses() {
       const coursesCollection = collection(db, "courses");
@@ -47,12 +62,31 @@
     loadCourses();
   
     async function saveStudent() {
+      let studentImageUrl = selectedStudentImageUrl;
+
+      if (studentImageUpload && studentImageUpload.files && studentImageUpload.files.length > 0) {
+        const file = studentImageUpload.files[0];
+        const storageRef = ref(storage, 'student_images/' + file.name);
+
+        try {
+          await uploadBytes(storageRef, file);
+          studentImageUrl = await getDownloadURL(storageRef);
+        } catch (error) {
+          console.error("Error uploading student image: ", error);
+          alert("An error occurred while uploading the student image.");
+          return;
+        }
+      }
+
       const studentData = {
-        name,
+        firstName,
+        lastName,
         email,
         phone,
         status,
-        course,
+        courseStatus,
+        courses: selectedCourses,
+        studentImageUrl,
         lastUpdated: serverTimestamp() as Timestamp,
       };
   
@@ -71,11 +105,7 @@
           dispatch("update", newStudent);
         }
   
-        name = "";
-        email = "";
-        phone = "";
-        status = "";
-        course = "";
+        closeDialog();
       } catch (error) {
         console.error("Error updating/adding student: ", error);
       }
@@ -83,11 +113,25 @@
   
     function closeDialog() {
       dispatch("close");
-      name = "";
-      email = "";
-      phone = "";
-      status = "";
-      course = "";
+        firstName = "";
+        lastName = "";
+        email = "";
+        phone = "";
+        status = "";
+        courseStatus = "";
+        selectedCourses = [];
+    }
+
+    function pickAuthorAvatar() {
+        studentImageUpload.click();
+    }
+
+    function handlestudentImageUpload(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
+        if (file) {
+            selectedStudentImageUrl = URL.createObjectURL(file);
+        }
     }
   </script>
   
@@ -98,52 +142,82 @@
         <Dialog.Description>Create a new student here.</Dialog.Description>
       </Dialog.Header>
       <form on:submit|preventDefault={saveStudent}>
-        <div class="grid gap-4 py-4">
-          <div class="grid grid-cols-4 items-center gap-4">
-            <Label for="name" class="text-right">Name</Label>
+        <div class="relative">
+          <img
+              src={selectedStudentImageUrl}
+              width={50}
+              height={50}
+              alt="AuthorAvatar"
+              class="overflow-hidden rounded-full cursor-pointer"
+              on:click={pickAuthorAvatar}
+          />
+          <input
+              type="file"
+              hidden
+              bind:this={studentImageUpload}
+              on:change={handlestudentImageUpload}
+              accept="image/png, image/jpeg"
+          />
+      </div>
+        <div class="grid grid-cols-2 gap-3 pb-2">
+          <div>
+            <Label for="name">First Name</Label>
             <Input
               id="name"
               placeholder="John Doe"
-              class="col-span-3"
-              bind:value={name}
+              bind:value={firstName}
             />
           </div>
-          <div class="grid grid-cols-4 items-center gap-4">
-            <Label for="email" class="text-right">Email</Label>
+          <div>
+            <Label for="name">Last Name</Label>
+            <Input
+              id="name"
+              placeholder="John Doe"
+              bind:value={lastName}
+            />
+          </div>
+          <div>
+            <Label for="email">E-mail</Label>
             <Input
               id="email"
               placeholder="student@demo.com"
-              class="col-span-3"
               bind:value={email}
             />
           </div>
-          <div class="grid grid-cols-4 items-center gap-4">
-            <Label for="phone" class="text-right">Phone</Label>
+          <div>
+            <Label for="phone">Phone</Label>
             <Input
               id="phone"
-              placeholder="555-1234"
-              class="col-span-3"
+              placeholder="+91 00000 00000"
               bind:value={phone}
             />
           </div>
-          <div class="grid grid-cols-4 items-center gap-4">
-            <Label for="status" class="text-right">Status</Label>
-            <Input
-              id="status"
-              placeholder="Active"
-              class="col-span-3"
-              bind:value={status}
-            />
+          <div>
+            <Label for="status" class="flex">Status</Label>
+            <select id="status" bind:value={status} required>
+              <option value="">Select a status</option>
+              {#each statusOptions as option}
+                <option value={option.value}>{option.label}</option>
+              {/each}
+            </select>
           </div>
-          <div class="grid grid-cols-4 items-center gap-4">
-            <Label for="course" class="text-right">Course</Label>
+          <div>
+            <Label for="courseStatus">Course Status</Label>
+            <select id="courseStatus" bind:value={courseStatus} required>
+              <option value="">Select a course status</option>
+              {#each courseStatusOptions as option}
+                <option value={option.value}>{option.label}</option>
+              {/each}
+            </select>
+          </div>
+          <div>
+            <Label for="courses">Courses</Label>
             <select
-              id="course"
-              class="col-span-3"
-              bind:value={course}
-              required
-            >
-              <option value="">Select a course</option>
+              id="courses"
+              class="text-wrap"
+              multiple
+              bind:value={selectedCourses}
+              required>
               {#each courses as course}
                 <option value={course.id}>{course.course}</option>
               {/each}
