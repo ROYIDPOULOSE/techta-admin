@@ -32,7 +32,8 @@ export const menuItems: MenuItem[] = [
       icon: "fa-user",
       items: [
         { name: "Student Details", page: "admin/student/studentDetails" },
-        { name: "Students got placed", page: "admin/student/studentsGotPlased" }
+        { name: "Add New Student", page: "admin/student/addNewStudent" },
+        { name: "Students got placed", page: "admin/student/studentsGotPlased" },
       ]
     },
     {
@@ -51,20 +52,20 @@ export const menuItems: MenuItem[] = [
         { name: "Enquiries", page: "admin/enquiries"},
       ]
     },
-     {
-      name: "CMS",
-      icon: "fa-users-viewfinder",
-      items: [
-	    	{ name: "Hero", page: "hero" },
-      ]
-    },
-    {
-      name: "Settings",
-      icon: "fa-gear",
-      items: [
-        { name: "General Settings", page: "settings-general" },
-        { name: "Tax Configuration", page: "settings-tax" },
-        { name: "Admin Users", page: "settings-admin-users" },
-      ]
-    },
+    //  {
+    //   name: "CMS",
+    //   icon: "fa-users-viewfinder",
+    //   items: [
+	  //   	{ name: "Hero", page: "hero" },
+    //   ]
+    // },
+    // {
+    //   name: "Settings",
+    //   icon: "fa-gear",
+    //   items: [
+    //     { name: "General Settings", page: "settings-general" },
+    //     { name: "Tax Configuration", page: "settings-tax" },
+    //     { name: "Admin Users", page: "settings-admin-users" },
+    //   ]
+    // },
   ];
